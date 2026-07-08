@@ -1,0 +1,189 @@
+package Infinitygroup.imersive_cam.client;
+
+import Infinitygroup.imersive_cam.api.client.Perspective;
+import Infinitygroup.imersive_cam.api.math.Vec2f;
+import Infinitygroup.imersive_cam.config.Config;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
+
+import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
+
+public class InputHandler {
+	public static final KeyMapping CAMERA_LEFT = createKeyMapping("adjust_camera_left", GLFW.GLFW_KEY_LEFT);
+	public static final KeyMapping CAMERA_RIGHT = createKeyMapping("adjust_camera_right", GLFW.GLFW_KEY_RIGHT);
+	public static final KeyMapping CAMERA_IN = createKeyMapping("adjust_camera_in", GLFW.GLFW_KEY_UP);
+	public static final KeyMapping CAMERA_OUT = createKeyMapping("adjust_camera_out", GLFW.GLFW_KEY_DOWN);
+	public static final KeyMapping CAMERA_UP = createKeyMapping("adjust_camera_up", GLFW.GLFW_KEY_PAGE_UP);
+	public static final KeyMapping CAMERA_DOWN = createKeyMapping("adjust_camera_down", GLFW.GLFW_KEY_PAGE_DOWN);
+	public static final KeyMapping SWAP_CAMERA_SIDE = createKeyMapping("swap_camera_side", GLFW.GLFW_KEY_U);
+	public static final KeyMapping TOGGLE_FIRST_PERSON = createKeyMapping("toggle_first_person", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping TOGGLE_THIRD_PERSON_FRONT = createKeyMapping("toggle_third_person_front", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping TOGGLE_THIRD_PERSON_BACK = createKeyMapping("toggle_third_person_back", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping FREE_LOOK = createKeyMapping("free_look", GLFW.GLFW_KEY_LEFT_ALT);
+	public static final KeyMapping TOGGLE_CAMERA_COUPLING = createKeyMapping("toggle_camera_coupling", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping TOGGLE_X_OFFSET_PRESETS = createKeyMapping("toggle_x_offset_presets", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping TOGGLE_Y_OFFSET_PRESETS = createKeyMapping("toggle_y_offset_presets", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping TOGGLE_Z_OFFSET_PRESETS = createKeyMapping("toggle_z_offset_presets", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping ENTER_FIRST_PERSON = createKeyMapping("enter_first_person", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping ENTER_THIRD_PERSON_FRONT = createKeyMapping("enter_third_person_front", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping ENTER_THIRD_PERSON_BACK = createKeyMapping("enter_third_person_back", InputConstants.UNKNOWN.getValue());
+	public static final KeyMapping ENTER_IMERSIVE_CAMERA = createKeyMapping("enter_imersive_camera", InputConstants.UNKNOWN.getValue());
+	
+	private final ImersiveCam instance;
+	
+	public InputHandler(ImersiveCam instance) {
+		this.instance = instance;
+	}
+	
+	public void tick() {
+		Options options = Minecraft.getInstance().options;
+		
+		while (TOGGLE_FIRST_PERSON.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				this.instance.changePerspective(Perspective.FIRST_PERSON);
+			} else {
+				this.instance.changePerspective(Perspective.IMERSIVE_CAMERA);
+			}
+		}
+		
+		while (TOGGLE_THIRD_PERSON_FRONT.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				this.instance.changePerspective(Perspective.THIRD_PERSON_FRONT);
+			} else {
+				this.instance.changePerspective(Perspective.IMERSIVE_CAMERA);
+			}
+		}
+		
+		while (TOGGLE_THIRD_PERSON_BACK.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				this.instance.changePerspective(Perspective.THIRD_PERSON_BACK);
+			} else {
+				this.instance.changePerspective(Perspective.IMERSIVE_CAMERA);
+			}
+		}
+		
+		while (ENTER_FIRST_PERSON.consumeClick()) {
+			this.instance.changePerspective(Perspective.FIRST_PERSON);
+		}
+		
+		while (ENTER_THIRD_PERSON_FRONT.consumeClick()) {
+			this.instance.changePerspective(Perspective.THIRD_PERSON_FRONT);
+		}
+		
+		while (ENTER_THIRD_PERSON_BACK.consumeClick()) {
+			this.instance.changePerspective(Perspective.THIRD_PERSON_BACK);
+		}
+		
+		while (ENTER_IMERSIVE_CAMERA.consumeClick()) {
+			this.instance.changePerspective(Perspective.IMERSIVE_CAMERA);
+		}
+		
+		while (CAMERA_LEFT.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraLeft();
+			}
+		}
+		
+		while (CAMERA_RIGHT.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraRight();
+			}
+		}
+		
+		while (CAMERA_OUT.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraOut();
+			}
+		}
+		
+		while (CAMERA_IN.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraIn();
+			}
+		}
+		
+		while (CAMERA_UP.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraUp();
+			}
+		}
+		
+		while (CAMERA_DOWN.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				Config.CLIENT.getCameraConfig().adjustCameraDown();
+			}
+		}
+		
+		while (SWAP_CAMERA_SIDE.consumeClick()) {
+			if (this.instance.isImersiveCam()) {
+				this.instance.swapCameraSide();
+			}
+		}
+		
+		while (options.keyTogglePerspective.consumeClick()) {
+			this.instance.togglePerspective();
+		}
+		
+		while (FREE_LOOK.consumeClick()) ;
+		
+		while (TOGGLE_CAMERA_COUPLING.consumeClick()) {
+			this.instance.toggleCameraCoupling();
+		}
+		
+		while (TOGGLE_X_OFFSET_PRESETS.consumeClick()) {
+			this.instance.toggleOffsetXPreset();
+		}
+		
+		while (TOGGLE_Y_OFFSET_PRESETS.consumeClick()) {
+			this.instance.toggleOffsetYPreset();
+		}
+		
+		while (TOGGLE_Z_OFFSET_PRESETS.consumeClick()) {
+			this.instance.toggleOffsetZPreset();
+		}
+	}
+	
+	public void updateMovementInput(Input input) {
+		Minecraft minecraft = Minecraft.getInstance();
+		Entity cameraEntity = minecraft.getCameraEntity();
+		if (this.instance.isFreeLooking() || cameraEntity == null || EventHooks.isForcingVanillaPlayerInput(cameraEntity)) {
+			return;
+		}
+		Vec2f moveVector = new Vec2f(input.getMoveVector());
+		if (this.instance.isImersiveCam() && minecraft.player != null && cameraEntity == minecraft.player && moveVector.lengthSquared() > 0) {
+			ImersiveCamCamera camera = this.instance.getCamera();
+			LocalPlayer player = minecraft.player;
+			float yRot = player.getYRot();
+			if (this.instance.isCameraDecoupled() && !this.instance.isLookFollowingCrosshairTarget()) {
+				// Update player rotations according to keyboard inputs and camera rotation
+				float cameraXRot = camera.getXRot();
+				float cameraYRot = camera.getYRot();
+				Vec2f rotated = moveVector.rotateDegrees(cameraYRot);
+				float xRot = cameraXRot * 0.5F;
+				float xRotO = player.getXRot();
+				float yRotO = yRot;
+				yRot = (float) Mth.wrapDegrees(Math.atan2(-rotated.x(), rotated.y()) * Mth.RAD_TO_DEG);
+				float turningSpeedMultiplier = (float) Config.CLIENT.getPlayerConfig().getTurningSpeedMultiplier();
+				xRot = xRotO + Mth.degreesDifference(xRotO, xRot) * turningSpeedMultiplier;
+				yRot = yRotO + Mth.degreesDifference(yRotO, yRot) * turningSpeedMultiplier;
+				player.setXRot(xRot);
+				player.setYRot(yRot);
+			}
+			Vec2f rotated = moveVector.rotateDegrees(Mth.degreesDifference(yRot, camera.getYRot()));
+			input.leftImpulse = rotated.x();
+			input.forwardImpulse = rotated.y();
+		}
+	}
+	
+	private static @NotNull KeyMapping createKeyMapping(String key, int keyCode) {
+		return new KeyMapping("key." + MOD_ID + "." + key, keyCode, "Imersive Cam");
+	}
+}

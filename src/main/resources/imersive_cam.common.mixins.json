@@ -1,0 +1,34 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "Infinitygroup.imersive_cam.mixin",
+  "refmap": "imersive_cam.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "AbstractClientPlayerMixin",
+    "BeeStingerLayerMixin",
+    "CameraMixin",
+    "CapeLayerMixin",
+    "ClientLevelMixin",
+    "ClientPacketListenerMixin",
+    "CompassItemPropertyFunctionMixin",
+    "DebugScreenOverlayMixin",
+    "EntityBoundSoundInstanceMixin",
+    "GameRendererAccessor",
+    "GameRendererMixin",
+    "GuiAccessor",
+    "GuiMixin",
+    "ItemMixin",
+    "LevelRendererMixin",
+    "LocalPlayerMixin",
+    "ModelPart$CubeMixin",
+    "ModelPartMixin",
+    "MouseHandlerMixin",
+    "OptionsMixin",
+    "PlayerMixin",
+    "RenderTypeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

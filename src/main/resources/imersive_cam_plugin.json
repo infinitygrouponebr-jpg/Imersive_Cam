@@ -1,0 +1,5 @@
+{
+  "entrypoints": [
+    "Infinitygroup.imersive_cam.plugin.BuiltinPlugin"
+  ]
+}

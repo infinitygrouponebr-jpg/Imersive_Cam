@@ -1,5 +1,5 @@
 {
-  "${modId}.configuration.title": "Configuración del Cliente de Shoulder Surfing Reloaded",
+  "${modId}.configuration.title": "Configuración del Cliente de Imersive Cam",
   "${modId}.configuration.section.${modId}.client.toml": "Configuración del Cliente",
   "${modId}.configuration.section.${modId}.client.toml.title": "Configuración del Cliente",
 
@@ -18,9 +18,9 @@
   "${modId}.configuration.camera.orient_camera_on_teleport": "Orientar cámara al teletransportarse",
   "${modId}.configuration.camera.orient_camera_on_teleport.tooltip": "Si se debe orientar la rotación de la cámara cuando el jugador se teletransporta. Esto incluye montar y desmontar pasajeros y viajar a través de portales.",
   "${modId}.configuration.camera.fov_override_enabled": "Anulación de FOV habilitada",
-  "${modId}.configuration.camera.fov_override_enabled.tooltip": "Si se debe aplicar la anulación de FOV cuando se está en la perspectiva de Shoulder Surfing.",
+  "${modId}.configuration.camera.fov_override_enabled.tooltip": "Si se debe aplicar la anulación de FOV cuando se está en la perspectiva de Imersive Cam.",
   "${modId}.configuration.camera.fov_override": "Anulación de FOV",
-  "${modId}.configuration.camera.fov_override.tooltip": "El FOV de la cámara cuando se está en la perspectiva de Shoulder Surfing. Depende de la opción de configuración 'Anulación de FOV habilitada'.",
+  "${modId}.configuration.camera.fov_override.tooltip": "El FOV de la cámara cuando se está en la perspectiva de Imersive Cam. Depende de la opción de configuración 'Anulación de FOV habilitada'.",
 
   "${modId}.configuration.camera.offset.button": "Editar",
   "${modId}.configuration.camera.offset": "Offset",
@@ -244,7 +244,7 @@
   "${modId}.configuration.crosshair.tooltip": "Configuración de la mira.",
 
   "${modId}.configuration.crosshair.crosshair_type": "Tipo de mira",
-  "${modId}.configuration.crosshair.crosshair_type.tooltip": "Tipo de mira a usar para Shoulder Surfing.",
+  "${modId}.configuration.crosshair.crosshair_type.tooltip": "Tipo de mira a usar para Imersive Cam.",
 
   "${modId}.configuration.adaptive_crosshair_hold_items.button": "Editar",
   "${modId}.configuration.crosshair.adaptive_crosshair_hold_items": "Objetos de mira adaptativa (sostener)",
@@ -284,8 +284,8 @@
   "${modId}.configuration.crosshair.visibility.third_person_back.tooltip": "Visibilidad de la mira en tercera persona trasera.",
   "${modId}.configuration.crosshair.visibility.third_person_front": "Visibilidad de la mira en tercera persona frontal",
   "${modId}.configuration.crosshair.visibility.third_person_front.tooltip": "Visibilidad de la mira en tercera persona frontal.",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing": "Visibilidad de la mira en Shoulder Surfing",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing.tooltip": "Visibilidad de la mira en Shoulder Surfing.",
+  "${modId}.configuration.crosshair.visibility.imersive_camera": "Visibilidad de la mira en Imersive Cam",
+  "${modId}.configuration.crosshair.visibility.imersive_camera.tooltip": "Visibilidad de la mira en Imersive Cam.",
 
   "${modId}.configuration.audio.button": "Editar",
   "${modId}.configuration.audio": "Audio",
@@ -302,7 +302,7 @@
   "key.${modId}.adjust_camera_out": "Ajustar cámara hacia afuera",
   "key.${modId}.adjust_camera_up": "Ajustar cámara hacia arriba",
   "key.${modId}.adjust_camera_down": "Ajustar cámara hacia abajo",
-  "key.${modId}.swap_shoulder": "Cambiar de hombro",
+  "key.${modId}.swap_camera_side": "Cambiar lado de cámara",
   "key.${modId}.toggle_first_person": "Alternar primera persona",
   "key.${modId}.toggle_third_person_front": "Alternar tercera persona (frontal)",
   "key.${modId}.toggle_third_person_back": "Alternar tercera persona (trasera)",

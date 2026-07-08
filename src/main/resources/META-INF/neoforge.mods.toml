@@ -5,10 +5,10 @@ authors = "${modAuthor}"
 license = "MIT"
 
 [[mixins]]
-config = "shouldersurfing.common.mixins.json"
+config = "imersive_cam.common.mixins.json"
 
 [[mixins]]
-config = "shouldersurfing.neoforge.mixins.json"
+config = "imersive_cam.neoforge.mixins.json"
 
 [[mods]]
 modId = "${modId}"

@@ -1,5 +1,5 @@
 {
-  "${modId}.configuration.title": "Настройки Shoulder Surfing",
+  "${modId}.configuration.title": "Настройки Imersive Cam",
   "${modId}.configuration.section.${modId}.client.toml": "Настройки клиента",
   "${modId}.configuration.section.${modId}.client.toml.title": "Настройки клиента",
 
@@ -344,8 +344,8 @@
   "${modId}.configuration.crosshair.visibility.third_person_back.tooltip": "Видимость прицела в режиме от третьего лица сзади.",
   "${modId}.configuration.crosshair.visibility.third_person_front": "Видимость перекрестия (от 3-го лица спереди)",
   "${modId}.configuration.crosshair.visibility.third_person_front.tooltip": "Видимость прицела в режиме от третьего лица спереди.",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing": "Видимость перекрестия (вид от плеча)",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing.tooltip": "Видимость прицела в режиме вида от плеча.",
+  "${modId}.configuration.crosshair.visibility.imersive_camera": "Видимость перекрестия (вид от плеча)",
+  "${modId}.configuration.crosshair.visibility.imersive_camera.tooltip": "Видимость прицела в режиме вида от плеча.",
 
   "${modId}.configuration.audio.button": "Изменить...",
   "${modId}.configuration.audio": "Звук",
@@ -381,7 +381,7 @@
   "key.${modId}.adjust_camera_out": "Отдалить камеру",
   "key.${modId}.adjust_camera_up": "Поднять камеру",
   "key.${modId}.adjust_camera_down": "Опустить камеру",
-  "key.${modId}.swap_shoulder": "Сменить плечо",
+  "key.${modId}.swap_camera_side": "Сменить сторону камеры",
   "key.${modId}.toggle_first_person": "Переключить вид от первого лица",
   "key.${modId}.toggle_third_person_front": "Переключить вид от третьего лица (спереди)",
   "key.${modId}.toggle_third_person_back": "Переключить вид от третьего лица (сзади)",
@@ -393,5 +393,5 @@
   "key.${modId}.enter_first_person": "Перейти к виду от первого лица",
   "key.${modId}.enter_third_person_front": "Перейти к виду от третьего лица (спереди)",
   "key.${modId}.enter_third_person_back": "Перейти к виду от третьего лица (сзади)",
-  "key.${modId}.enter_shoulder_surfing": "Перейти к виду от плеча"
+  "key.${modId}.enter_imersive_camera": "Перейти к виду от плеча"
 }

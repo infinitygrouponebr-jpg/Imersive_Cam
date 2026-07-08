@@ -1,7 +1,7 @@
 {
-  "modmenu.nameTranslation.${modId}": "Shoulder Surfing Reloaded（越肩視角重製版）",
+  "modmenu.nameTranslation.${modId}": "Imersive Cam（越肩視角重製版）",
 
-  "${modId}.configuration.title": "Shoulder Surfing Reloaded 用戶端設定",
+  "${modId}.configuration.title": "Imersive Cam 用戶端設定",
   "${modId}.configuration.section.${modId}.client.toml": "用戶端設定",
   "${modId}.configuration.section.${modId}.client.toml.title": "用戶端設定",
 
@@ -362,8 +362,8 @@
   "${modId}.configuration.crosshair.visibility.third_person_back.tooltip": "第三人稱後視角下的準心可見度。",
   "${modId}.configuration.crosshair.visibility.third_person_front": "第三人稱前視角準心可見度",
   "${modId}.configuration.crosshair.visibility.third_person_front.tooltip": "第三人稱前視角下的準心可見度。",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing": "越肩視角準心可見度",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing.tooltip": "越肩視角下的準心可見度。",
+  "${modId}.configuration.crosshair.visibility.imersive_camera": "越肩視角準心可見度",
+  "${modId}.configuration.crosshair.visibility.imersive_camera.tooltip": "越肩視角下的準心可見度。",
 
   "${modId}.configuration.audio.button": "編輯",
   "${modId}.configuration.audio": "音訊",
@@ -392,7 +392,7 @@
   "key.${modId}.adjust_camera_out": "調整相機向外",
   "key.${modId}.adjust_camera_up": "調整相機上移",
   "key.${modId}.adjust_camera_down": "調整相機下移",
-  "key.${modId}.swap_shoulder": "切換肩膀",
+  "key.${modId}.swap_camera_side": "切換鏡頭側邊",
   "key.${modId}.toggle_first_person": "切換第一人稱",
   "key.${modId}.toggle_third_person_front": "切換第三人稱（前）",
   "key.${modId}.toggle_third_person_back": "切換第三人稱（後）",
@@ -404,5 +404,5 @@
   "key.${modId}.enter_first_person": "進入第一人稱",
   "key.${modId}.enter_third_person_front": "進入第三人稱（前）",
   "key.${modId}.enter_third_person_back": "進入第三人稱（後）",
-  "key.${modId}.enter_shoulder_surfing": "進入越肩視角"
+  "key.${modId}.enter_imersive_camera": "進入越肩視角"
 }

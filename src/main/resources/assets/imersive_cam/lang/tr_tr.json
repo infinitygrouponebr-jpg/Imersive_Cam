@@ -1,5 +1,5 @@
 {
-  "${modId}.configuration.title": "Shoulder Surfing Reloaded Client Yapılandırması",
+  "${modId}.configuration.title": "Imersive Cam Client Yapılandırması",
   "${modId}.configuration.section.${modId}.client.toml": "Client Yapılandırması",
   "${modId}.configuration.section.${modId}.client.toml.title": "Client Yapılandırması",
 
@@ -232,7 +232,7 @@
   "${modId}.configuration.crosshair.tooltip": "Nişangah ayarları.",
 
   "${modId}.configuration.crosshair.crosshair_type": "Nişangah türü",
-  "${modId}.configuration.crosshair.crosshair_type.tooltip": "Shoulder surfing için nişangah tipi.",
+  "${modId}.configuration.crosshair.crosshair_type.tooltip": "Imersive camera için nişangah tipi.",
 
   "${modId}.configuration.adaptive_crosshair_hold_items.button": "Düzenle",
   "${modId}.configuration.crosshair.adaptive_crosshair_hold_items": "Uyarlanabilir nişangah itemleri (tutuş)",
@@ -260,8 +260,8 @@
   "${modId}.configuration.crosshair.visibility.third_person_back.tooltip": "Üçüncü şahıs arka için nişangah görünürlüğü.",
   "${modId}.configuration.crosshair.visibility.third_person_front": "Üçüncü şahıs nişangah görünürlüğü",
   "${modId}.configuration.crosshair.visibility.third_person_front.tooltip": "Üçüncü şahıs için nişangah görünürlüğü.",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing": "Shoulder Surfing nişangah görünürlüğü",
-  "${modId}.configuration.crosshair.visibility.shoulder_surfing.tooltip": "Shoulder Surfing için nişangah görünürlüğü.",
+  "${modId}.configuration.crosshair.visibility.imersive_camera": "Imersive Cam nişangah görünürlüğü",
+  "${modId}.configuration.crosshair.visibility.imersive_camera.tooltip": "Imersive Cam için nişangah görünürlüğü.",
 
   "${modId}.configuration.audio.button": "Düzenle",
   "${modId}.configuration.audio": "Ses",
@@ -278,7 +278,7 @@
   "key.${modId}.adjust_camera_out": "Kamerayı Uzaklaştır",
   "key.${modId}.adjust_camera_up": "Kamerayı Yukarı Ayarla",
   "key.${modId}.adjust_camera_down": "Kamerayı Aşağı Ayarla",
-  "key.${modId}.swap_shoulder": "Omuz Değiştir",
+  "key.${modId}.swap_camera_side": "Kamera Tarafını Değiştir",
   "key.${modId}.free_look": "Serbest Bakış",
   "key.${modId}.toggle_camera_coupling": "Kamera Bağlantısını Değiştir"
 }

@@ -1,0 +1,27 @@
+package Infinitygroup.imersive_cam.config;
+
+import Infinitygroup.imersive_cam.api.config.IAudioConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+
+import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
+
+public class AudioConfig implements IAudioConfig {
+	private final BooleanValue isPlayerSoundCentered;
+	
+	protected AudioConfig(ModConfigSpec.Builder builder) {
+		builder.push("audio");
+		
+		this.isPlayerSoundCentered = builder
+			.comment("Whether to center sounds made by the player.")
+			.translation(MOD_ID + ".configuration.audio.center_player_sounds")
+			.define("center_player_sounds", false);
+		
+		builder.pop();
+	}
+	
+	@Override
+	public boolean isPlayerSoundCentered() {
+		return this.isPlayerSoundCentered.get();
+	}
+}
