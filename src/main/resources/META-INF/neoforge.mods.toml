@@ -1,0 +1,59 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+displayURL = "${modUrl}"
+authors = "${modAuthor}"
+license = "MIT"
+
+[[mixins]]
+config = "shouldersurfing.common.mixins.json"
+
+[[mixins]]
+config = "shouldersurfing.neoforge.mixins.json"
+
+[[mods]]
+modId = "${modId}"
+version = "${minecraftVersion}-${modVersion}"
+displayName = "${modName}"
+credits = "${modContributors}"
+description = "${modDescription}"
+displayTest = "NONE"
+
+[[dependencies.${modId}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0.143,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
+modId = "betterthirdperson"
+type = "incompatible"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
+modId = "camerautils"
+type = "incompatible"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
+modId = "nimble"
+type = "incompatible"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
+modId = "valkyrienskies"
+type = "incompatible"
+side = "CLIENT"
+versionRange = "(,2.4.11]"
+
+[[dependencies.${modId}]]
+modId = "customcameraview"
+type = "incompatible"
+side = "CLIENT"
