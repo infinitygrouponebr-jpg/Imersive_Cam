@@ -18,9 +18,9 @@ public class CameraConfig implements ICameraConfig {
 	// Tactical side-offset camera baseline:
 	// offsetX controls lateral placement, offsetY controls height and offsetZ controls distance.
 	// These defaults aim for a higher HumanitZ-like survival camera while staying a bit closer for Minecraft spaces.
-	private static final double DEFAULT_TACTICAL_OFFSET_X = -0.65D;
-	private static final double DEFAULT_TACTICAL_OFFSET_Y = 2.65D;
-	private static final double DEFAULT_TACTICAL_OFFSET_Z = 4.25D;
+	private static final double DEFAULT_TACTICAL_OFFSET_X = -0.55D;
+	private static final double DEFAULT_TACTICAL_OFFSET_Y = 3.00D;
+	private static final double DEFAULT_TACTICAL_OFFSET_Z = 4.30D;
 	// Higher transition speed means less lag and a more stable side-offset camera.
 	private static final double DEFAULT_TACTICAL_TRANSITION_SPEED = 0.40D;
 
@@ -130,17 +130,17 @@ public class CameraConfig implements ICameraConfig {
 		this.offsetXPresets = builder
 			.comment("A list of x-offset presets that can be toggled via the 'Toggle X-Offset Presets' keybind. X controls lateral placement and these defaults keep the camera slightly over the right shoulder. WARNING: Duplicate entries can result in undefined behavior!")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_x_presets")
-			.defineList("presets_offset_x", () -> new ArrayList<String>(List.of("-0.45", "-0.65", "-0.85")), String::new, ClientConfig::isValidDouble);
+			.defineList("presets_offset_x", () -> new ArrayList<String>(List.of("-0.45", "-0.55", "-0.70")), String::new, ClientConfig::isValidDouble);
 		
 		this.offsetYPresets = builder
 			.comment("A list of y-offset presets that can be toggled via the 'Toggle Y-Offset Presets' keybind. Y controls height and these defaults raise the camera above the player without pushing into an exaggerated top-down angle. WARNING: Duplicate entries can result in undefined behavior!")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_y_presets")
-			.defineList("presets_offset_y", () -> new ArrayList<String>(List.of("2.25", "2.65", "3.05")), String::new, ClientConfig::isValidDouble);
+			.defineList("presets_offset_y", () -> new ArrayList<String>(List.of("2.60", "3.00", "3.40")), String::new, ClientConfig::isValidDouble);
 		
 		this.offsetZPresets = builder
 			.comment("A list of z-offset presets that can be toggled via the 'Toggle Z-Offset Presets' keybind. Z controls distance behind the player and these defaults keep a tactical view that is broad, but still closer than a distant survival camera. WARNING: Duplicate entries can result in undefined behavior!")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_z_presets")
-			.defineList("presets_offset_z", () -> new ArrayList<String>(List.of("3.80", "4.25", "4.70")), String::new, ClientConfig::isValidDouble);
+			.defineList("presets_offset_z", () -> new ArrayList<String>(List.of("3.80", "4.30", "4.80")), String::new, ClientConfig::isValidDouble);
 		
 		builder.pop();
 		builder.push("min");
