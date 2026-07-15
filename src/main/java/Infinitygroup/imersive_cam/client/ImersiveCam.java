@@ -23,6 +23,7 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class ImersiveCam implements IImersiveCam {
+	private static final Perspective LOCKED_PERSPECTIVE = Perspective.IMERSIVE_CAMERA;
 	private final ImersiveCamCamera camera = new ImersiveCamCamera(this);
 	private final CameraEntityRenderer playerRenderer = new CameraEntityRenderer(this);
 	private final CrosshairRenderer crosshairRenderer = new CrosshairRenderer(this);
@@ -44,7 +45,10 @@ public class ImersiveCam implements IImersiveCam {
 		PluginLoader.getInstance().loadPlugins();
 		this.eventBus = EventBus.create(PluginLoader.getInstance().getPluginContainers());
 		PerspectiveConfig perspectiveConfig = Config.CLIENT.getPerspectiveConfig();
-		Perspective targetPerspective = perspectiveConfig.getDefaultPerspective();
+		if (perspectiveConfig.getDefaultPerspective() != LOCKED_PERSPECTIVE) {
+			perspectiveConfig.setDefaultPerspective(LOCKED_PERSPECTIVE);
+		}
+		Perspective targetPerspective = LOCKED_PERSPECTIVE;
 		if (!targetPerspective.isEnabled(perspectiveConfig)) {
 			targetPerspective = targetPerspective.next(perspectiveConfig);
 		}
@@ -61,22 +65,10 @@ public class ImersiveCam implements IImersiveCam {
 		if (minecraft.screen == null) {
 			this.inputHandler.tick();
 		}
-		boolean isFirstPerson = Perspective.FIRST_PERSON == Perspective.current();
-		if (!isFirstPerson) {
-			this.isTemporaryFirstPerson = false;
-		}
+		this.enforceLockedPerspective(minecraft);
+		this.isTemporaryFirstPerson = false;
 		Entity cameraEntity = minecraft.getCameraEntity();
 		this.isAiming = computeIsAiming(cameraEntity);
-		if (this.isImersiveCam) {
-			if (EventHooks.isTemporaryFirstPerson()) {
-				this.changePerspective(Perspective.FIRST_PERSON);
-				this.isTemporaryFirstPerson = true;
-			}
-		} else if (this.isTemporaryFirstPerson && isFirstPerson) {
-			if (!EventHooks.isTemporaryFirstPerson()) {
-				this.changePerspective(Perspective.IMERSIVE_CAMERA);
-			}
-		}
 		LocalPlayer player = minecraft.player;
 		this.updatePlayerRotations = false;
 		this.isCameraDecoupled = computeIsCameraDecoupled(cameraEntity, this.isImersiveCam, this.isAiming);
@@ -97,6 +89,16 @@ public class ImersiveCam implements IImersiveCam {
 			}
 		}
 		EventHooks.tick();
+	}
+
+	private void enforceLockedPerspective(Minecraft minecraft) {
+		if (minecraft.level == null || minecraft.player == null) {
+			return;
+		}
+		if (Perspective.current() != LOCKED_PERSPECTIVE || !this.isImersiveCam) {
+			this.isTemporaryFirstPerson = false;
+			this.changePerspective(LOCKED_PERSPECTIVE);
+		}
 	}
 	
 	private static boolean computeIsAiming(Entity cameraEntity) {
@@ -194,6 +196,7 @@ public class ImersiveCam implements IImersiveCam {
 	
 	@Override
 	public void changePerspective(Perspective perspective) {
+		perspective = LOCKED_PERSPECTIVE;
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;
 		boolean wasImersiveCam = this.isImersiveCam;
@@ -219,14 +222,14 @@ public class ImersiveCam implements IImersiveCam {
 		Minecraft minecraft = Minecraft.getInstance();
 		Perspective current = Perspective.current();
 		PerspectiveConfig perspectiveConfig = Config.CLIENT.getPerspectiveConfig();
-		Perspective next = current.next(perspectiveConfig);
+		Perspective next = LOCKED_PERSPECTIVE;
 		this.changePerspective(next);
 		boolean isFirstPerson = next.getCameraType().isFirstPerson();
 		if (current.getCameraType().isFirstPerson() != isFirstPerson) {
 			minecraft.gameRenderer.checkEntityPostEffect(isFirstPerson ? minecraft.getCameraEntity() : null);
 		}
-		if (perspectiveConfig.isPerspectivePersistent()) {
-			perspectiveConfig.setDefaultPerspective(next);
+		if (perspectiveConfig.getDefaultPerspective() != LOCKED_PERSPECTIVE) {
+			perspectiveConfig.setDefaultPerspective(LOCKED_PERSPECTIVE);
 		}
 	}
 	

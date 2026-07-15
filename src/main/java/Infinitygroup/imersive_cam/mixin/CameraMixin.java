@@ -6,6 +6,7 @@ import Infinitygroup.imersive_cam.client.ImersiveCam;
 import Infinitygroup.imersive_cam.client.ImersiveCamCamera;
 import Infinitygroup.imersive_cam.mixinduck.CameraDuck;
 import net.minecraft.client.Camera;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -115,11 +116,22 @@ public abstract class CameraMixin implements CameraDuck {
 			camera.setup(cameraIn, level, partialTick, cameraEntity);
 			Vec3 cameraOffset = camera.getRenderOffset();
 			this.move((float) -cameraOffset.z(), (float) cameraOffset.y(), (float) -cameraOffset.x());
+			Vec2f rotation = camera.getRenderRotation();
+			this.setRotation(rotation.y(), this.imersivecam$frameCameraPitch(rotation.x(), cameraOffset));
 			Vec2f sway = camera.calcSway(cameraEntity, partialTick);
 			this.imersivecam$rotate(sway.x(), 0, sway.y());
 		} else {
 			this.move(x, y, z);
 		}
+	}
+
+	@Unique
+	private float imersivecam$frameCameraPitch(float xRot, Vec3 cameraOffset) {
+		if (cameraOffset.y() <= 0.0D || Math.abs(cameraOffset.z()) < 0.001D) {
+			return xRot;
+		}
+		float framingPitch = (float) Math.toDegrees(Math.atan2(cameraOffset.y(), Math.abs(cameraOffset.z())));
+		return Mth.clamp(xRot + framingPitch, -90.0F, 90.0F);
 	}
 	
 	@Unique

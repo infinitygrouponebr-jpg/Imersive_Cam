@@ -17,10 +17,10 @@ import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 public class CameraConfig implements ICameraConfig {
 	// Tactical side-offset camera baseline:
 	// offsetX controls lateral placement, offsetY controls height and offsetZ controls distance.
-	// These defaults aim for a higher HumanitZ-like survival camera while staying a bit closer for Minecraft spaces.
-	private static final double DEFAULT_TACTICAL_OFFSET_X = -0.55D;
+	// These defaults keep a higher tactical camera while the final camera pitch keeps the player framed.
+	private static final double DEFAULT_TACTICAL_OFFSET_X = 0.0D;
 	private static final double DEFAULT_TACTICAL_OFFSET_Y = 3.00D;
-	private static final double DEFAULT_TACTICAL_OFFSET_Z = 4.30D;
+	private static final double DEFAULT_TACTICAL_OFFSET_Z = 4.00D;
 	// Higher transition speed means less lag and a more stable side-offset camera.
 	private static final double DEFAULT_TACTICAL_TRANSITION_SPEED = 0.40D;
 
@@ -116,7 +116,7 @@ public class CameraConfig implements ICameraConfig {
 			.defineInRange("offset_x", DEFAULT_TACTICAL_OFFSET_X, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
 		this.offsetY = builder
-			.comment("Third person camera y-offset. Higher values lift the camera above the upper body and closer to head level.")
+			.comment("Third person camera y-offset. Higher values lift the camera above the player and push the player lower on the screen.")
 			.translation(MOD_ID + ".configuration.camera.offset.offset_y")
 			.defineInRange("offset_y", DEFAULT_TACTICAL_OFFSET_Y, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
@@ -130,7 +130,7 @@ public class CameraConfig implements ICameraConfig {
 		this.offsetXPresets = builder
 			.comment("A list of x-offset presets that can be toggled via the 'Toggle X-Offset Presets' keybind. X controls lateral placement and these defaults keep the camera slightly over the right shoulder. WARNING: Duplicate entries can result in undefined behavior!")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_x_presets")
-			.defineList("presets_offset_x", () -> new ArrayList<String>(List.of("-0.45", "-0.55", "-0.70")), String::new, ClientConfig::isValidDouble);
+			.defineList("presets_offset_x", () -> new ArrayList<String>(List.of("-0.25", "-0.15", "0.0")), String::new, ClientConfig::isValidDouble);
 		
 		this.offsetYPresets = builder
 			.comment("A list of y-offset presets that can be toggled via the 'Toggle Y-Offset Presets' keybind. Y controls height and these defaults raise the camera above the player without pushing into an exaggerated top-down angle. WARNING: Duplicate entries can result in undefined behavior!")
@@ -140,7 +140,7 @@ public class CameraConfig implements ICameraConfig {
 		this.offsetZPresets = builder
 			.comment("A list of z-offset presets that can be toggled via the 'Toggle Z-Offset Presets' keybind. Z controls distance behind the player and these defaults keep a tactical view that is broad, but still closer than a distant survival camera. WARNING: Duplicate entries can result in undefined behavior!")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_z_presets")
-			.defineList("presets_offset_z", () -> new ArrayList<String>(List.of("3.80", "4.30", "4.80")), String::new, ClientConfig::isValidDouble);
+			.defineList("presets_offset_z", () -> new ArrayList<String>(List.of("3.60", "4.00", "4.40")), String::new, ClientConfig::isValidDouble);
 		
 		builder.pop();
 		builder.push("min");
@@ -405,9 +405,9 @@ public class CameraConfig implements ICameraConfig {
 			.defineInRange("camera_transition_speed_multiplier", DEFAULT_TACTICAL_TRANSITION_SPEED, 0.05D, 1.0D);
 		
 		this.centerCameraWhenLookingDownAngle = builder
-			.comment("The angle at which the camera will be centered when looking down. Set to 0 to disable. Disabled by default here to avoid a top-down feel.")
+			.comment("The angle from straight down where x/y offsets are smoothly reduced to keep the player framed. Set to 0 to disable.")
 			.translation(MOD_ID + ".configuration.camera.center_camera_when_looking_down_angle")
-			.defineInRange("center_camera_when_looking_down_angle", 0D, 0D, 90D);
+			.defineInRange("center_camera_when_looking_down_angle", 65D, 0D, 90D);
 		
 		this.isCameraDecoupled = builder
 			.comment("Whether to decouple the camera rotation from the player rotation.")

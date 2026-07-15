@@ -146,13 +146,23 @@ public class ComputeTargetCameraOffsetEventHandlerImpl {
 		
 		@Override
 		public void handle(ComputeTargetCameraOffsetEvent event) {
-			if (!event.getCameraEntity().isSpectator() && isCameraLookingDown(event.getCamera())) {
-				event.setResult(new Vec3(0, 0, event.getResult().z()));
+			double centerAngle = Config.CLIENT.getCameraConfig().getCenterCameraWhenLookingDownAngle();
+			if (!event.getCameraEntity().isSpectator() && centerAngle > 0.0D) {
+				double downAmount = getCameraLookingDownAmount(event.getCamera(), centerAngle);
+				if (downAmount > 0.0D) {
+					Vec3 offset = event.getResult();
+					double frameScale = 1.0D - downAmount;
+					event.setResult(new Vec3(offset.x() * frameScale, offset.y() * frameScale, offset.z()));
+				}
 			}
 		}
 		
-		private boolean isCameraLookingDown(Camera camera) {
-			return camera.getLookVector().angle(VECTOR_NEGATIVE_Y) < Config.CLIENT.getCameraConfig().getCenterCameraWhenLookingDownAngle() * Mth.DEG_TO_RAD;
+		private double getCameraLookingDownAmount(Camera camera, double centerAngle) {
+			double angleToDown = camera.getLookVector().angle(VECTOR_NEGATIVE_Y) * Mth.RAD_TO_DEG;
+			if (angleToDown >= centerAngle) {
+				return 0.0D;
+			}
+			return 1.0D - (angleToDown / centerAngle);
 		}
 	}
 	
