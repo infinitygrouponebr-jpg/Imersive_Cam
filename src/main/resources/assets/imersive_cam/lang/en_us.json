@@ -304,6 +304,16 @@
   "${modId}.configuration.crosshair.crosshair_type": "Crosshair type",
   "${modId}.configuration.crosshair.crosshair_type.tooltip": "Crosshair type to use for immersive camera.",
 
+  "${modId}.configuration.tacz.button": "Edit",
+  "${modId}.configuration.tacz": "TaCZ Crosshair",
+  "${modId}.configuration.tacz.tooltip": "TaCZ crosshair settings.",
+  "${modId}.configuration.crosshair.tacz.enable_tacz_crosshair": "Enable TaCZ crosshair",
+  "${modId}.configuration.crosshair.tacz.enable_tacz_crosshair.tooltip": "Whether to render the Immersive Cam crosshair for TaCZ guns in immersive camera perspective.",
+  "${modId}.configuration.crosshair.tacz.hide_tacz_crosshair_during_ads": "Hide TaCZ crosshair during ADS",
+  "${modId}.configuration.crosshair.tacz.hide_tacz_crosshair_during_ads.tooltip": "Whether to fade and hide the Immersive Cam TaCZ crosshair during ADS.",
+  "${modId}.configuration.crosshair.tacz.tacz_crosshair_ads_hide_threshold": "TaCZ ADS hide threshold",
+  "${modId}.configuration.crosshair.tacz.tacz_crosshair_ads_hide_threshold.tooltip": "ADS progress at which the Immersive Cam TaCZ crosshair is fully hidden.",
+
   "${modId}.configuration.adaptive_crosshair_hold_items.button": "Edit",
   "${modId}.configuration.crosshair.adaptive_crosshair_hold_items": "Adaptive crosshair items (hold)",
   "${modId}.configuration.crosshair.adaptive_crosshair_hold_items.tooltip": "Items that when held, trigger the dynamic crosshair in adaptive mode. This config option supports regular expressions. Example: 'minecraft:.*sword' matches 'minecraft:wooden_sword' and 'minecraft:netherite_sword'.",

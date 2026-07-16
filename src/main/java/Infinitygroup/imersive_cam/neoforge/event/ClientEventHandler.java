@@ -4,6 +4,7 @@ import Infinitygroup.imersive_cam.ImersiveCamCommon;
 import Infinitygroup.imersive_cam.api.client.IImersiveCam;
 import Infinitygroup.imersive_cam.client.ImersiveCam;
 import Infinitygroup.imersive_cam.client.renderer.CrosshairRenderer;
+import Infinitygroup.imersive_cam.compat.tacz.TaczCrosshairLayer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -17,13 +18,16 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.joml.Matrix4f;
 
 public class ClientEventHandler {
+	private static final ResourceLocation PRE_CROSSHAIR_LAYER = ResourceLocation.fromNamespaceAndPath(ImersiveCamCommon.MOD_ID, "pre_crosshair");
+	private static final ResourceLocation POST_CROSSHAIR_LAYER = ResourceLocation.fromNamespaceAndPath(ImersiveCamCommon.MOD_ID, "post_crosshair");
+
 	@SubscribeEvent
 	public static void clientTickEvent(ClientTickEvent.Pre event) {
 		if (!Minecraft.getInstance().isPaused()) {
 			ImersiveCam.getInstance().tick();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void preRenderGuiOverlayEvent(RenderGuiLayerEvent.Pre event) {
 		if (VanillaGuiLayers.CROSSHAIR.equals(event.getName())) {
@@ -32,12 +36,12 @@ public class ClientEventHandler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void registerGuiOverlaysEvent(RegisterGuiLayersEvent event) {
 		event.registerBelow(
 			VanillaGuiLayers.CROSSHAIR,
-			ResourceLocation.fromNamespaceAndPath(ImersiveCamCommon.MOD_ID, "pre_crosshair"),
+			PRE_CROSSHAIR_LAYER,
 			(guiGraphics, deltaTracker) -> {
 				CrosshairRenderer crosshairRenderer = ImersiveCam.getInstance().getCrosshairRenderer();
 				if (crosshairRenderer.isCrosshairVisible()) {
@@ -47,7 +51,7 @@ public class ClientEventHandler {
 		);
 		event.registerAbove(
 			VanillaGuiLayers.CROSSHAIR,
-			ResourceLocation.fromNamespaceAndPath(ImersiveCamCommon.MOD_ID, "post_crosshair"),
+			POST_CROSSHAIR_LAYER,
 			(guiGraphics, deltaTracker) -> {
 				CrosshairRenderer crosshairRenderer = ImersiveCam.getInstance().getCrosshairRenderer();
 				if (crosshairRenderer.isCrosshairVisible()) {
@@ -55,8 +59,13 @@ public class ClientEventHandler {
 				}
 			}
 		);
+		event.registerBelow(
+			POST_CROSSHAIR_LAYER,
+			TaczCrosshairLayer.LAYER_ID,
+			(guiGraphics, deltaTracker) -> TaczCrosshairLayer.render(guiGraphics, deltaTracker.getGameTimeDeltaPartialTick(false))
+		);
 	}
-	
+
 	@SubscribeEvent
 	public static void renderLevelStageEvent(RenderLevelStageEvent event) {
 		if (RenderLevelStageEvent.Stage.AFTER_SKY.equals(event.getStage())) {
@@ -69,7 +78,7 @@ public class ClientEventHandler {
 			instance.getCrosshairRenderer().renderTick(camera, modelViewMatrix, projectionMatrix, partialTick);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void movementInputUpdateEvent(MovementInputUpdateEvent event) {
 		ImersiveCam.getInstance().getInputHandler().updateMovementInput(event.getInput());

@@ -28,20 +28,23 @@ public class CrosshairConfig implements ICrosshairConfig {
 	private final ConfigValue<List<? extends String>> adaptiveCrosshairHoldItemProperties;
 	private final ConfigValue<List<? extends String>> adaptiveCrosshairUseItemProperties;
 	private final Map<Perspective, ConfigValue<CrosshairVisibility>> crosshairVisibility = new HashMap<Perspective, ConfigValue<CrosshairVisibility>>();
-	
+
 	private final BooleanValue isObstructionIndicatorEnabled;
 	private final BooleanValue isObstructionIndicatorOnlyShownWhenAiming;
 	private final IntValue obstructionIndicatorMinDistanceToCrosshair;
 	private final DoubleValue obstructionIndicatorMaxDistanceToObstruction;
-	
+	private final BooleanValue isTaczCrosshairEnabled;
+	private final BooleanValue hideTaczCrosshairDuringAds;
+	private final DoubleValue taczCrosshairAdsHideThreshold;
+
 	protected CrosshairConfig(ModConfigSpec.Builder builder) {
 		builder.push("crosshair");
-		
+
 		this.crosshairType = builder
 			.comment("Crosshair type to use for immersive camera. Dynamic is the default for the tactical side-offset profile so the center of the screen better matches the camera focus.")
 			.translation(MOD_ID + ".configuration.crosshair.crosshair_type")
 			.defineEnum("crosshair_type", CrosshairType.DYNAMIC, CrosshairType.values());
-		
+
 		this.adaptiveCrosshairHoldItems = builder
 			.comment("Items that when held, trigger the dynamic crosshair in adaptive mode. This config option supports regular expressions. Example: 'minecraft:.*sword' matches 'minecraft:wooden_sword' and 'minecraft:netherite_sword'.")
 			.translation(MOD_ID + ".configuration.crosshair.adaptive_crosshair_hold_items")
@@ -57,12 +60,12 @@ public class CrosshairConfig implements ICrosshairConfig {
 				items.add(BuiltInRegistries.ITEM.getKey(Items.WIND_CHARGE).toString());
 				return items;
 			}, String::new, Objects::nonNull);
-		
+
 		this.adaptiveCrosshairUseItems = builder
 			.comment("Items that when used, trigger the dynamic crosshair in adaptive mode. This config option supports regular expressions. Example: 'minecraft:.*sword' matches 'minecraft:wooden_sword' and 'minecraft:netherite_sword'.")
 			.translation(MOD_ID + ".configuration.crosshair.adaptive_crosshair_use_items")
 			.defineList("adaptive_crosshair_use_items", ArrayList::new, String::new, Objects::nonNull);
-		
+
 		this.adaptiveCrosshairHoldItemProperties = builder
 			.comment("Item properties of an item, that when held, trigger the dynamic crosshair in adaptive mode.")
 			.translation(MOD_ID + ".configuration.crosshair.adaptive_crosshair_hold_item_properties")
@@ -71,7 +74,7 @@ public class CrosshairConfig implements ICrosshairConfig {
 				items.add(ResourceLocation.withDefaultNamespace("charged").toString());
 				return items;
 			}, String::new, item -> item != null && ResourceLocation.tryParse(item.toString()) != null);
-		
+
 		this.adaptiveCrosshairUseItemProperties = builder
 			.comment("Item properties of an item, that when used, trigger the dynamic crosshair in adaptive mode.")
 			.translation(MOD_ID + ".configuration.crosshair.adaptive_crosshair_use_item_properties")
@@ -81,32 +84,50 @@ public class CrosshairConfig implements ICrosshairConfig {
 				items.add(ResourceLocation.withDefaultNamespace("throwing").toString());
 				return items;
 			}, String::new, item -> item != null && ResourceLocation.tryParse(item.toString()) != null);
-		
+
 		builder.push("obstruction");
-		
+
 		this.isObstructionIndicatorEnabled = builder
 			.comment("When the crosshair type is static, shows an additional indicator on obstacles that stand between you and your target.")
 			.translation(MOD_ID + ".configuration.obstruction.obstruction_indicator")
 			.define("obstruction_indicator", true);
-		
+
 		this.isObstructionIndicatorOnlyShownWhenAiming = builder
 			.comment("Only show the obstruction indicator when using items that would trigger the adaptive crosshair.")
 			.translation(MOD_ID + ".configuration.obstruction.only_when_aiming")
 			.define("only_when_aiming", true);
-		
+
 		this.obstructionIndicatorMinDistanceToCrosshair = builder
 			.comment("Hide the obstruction indicator when it is too close to the main crosshair. Distance measured in scaled pixels.")
 			.translation(MOD_ID + ".configuration.obstruction.min_distance_to_crosshair")
 			.defineInRange("min_distance_to_crosshair", 8, 0, Integer.MAX_VALUE);
-		
+
 		this.obstructionIndicatorMaxDistanceToObstruction = builder
 			.comment("Ignore obstructions that are too far away from the player. Distance measured in blocks. Set to 0 to disable.")
 			.translation(MOD_ID + ".configuration.obstruction.max_distance_to_obstruction")
 			.defineInRange("max_distance_to_obstruction", 20, 0, Double.MAX_VALUE);
-		
+
+		builder.pop();
+		builder.push("tacz");
+
+		this.isTaczCrosshairEnabled = builder
+			.comment("Whether to render the Immersive Cam crosshair for TaCZ guns in immersive camera perspective.")
+			.translation(MOD_ID + ".configuration.crosshair.tacz.enable_tacz_crosshair")
+			.define("enable_tacz_crosshair", true);
+
+		this.hideTaczCrosshairDuringAds = builder
+			.comment("Whether to fade and hide the Immersive Cam TaCZ crosshair during ADS.")
+			.translation(MOD_ID + ".configuration.crosshair.tacz.hide_tacz_crosshair_during_ads")
+			.define("hide_tacz_crosshair_during_ads", true);
+
+		this.taczCrosshairAdsHideThreshold = builder
+			.comment("ADS progress at which the Immersive Cam TaCZ crosshair is fully hidden.")
+			.translation(MOD_ID + ".configuration.crosshair.tacz.tacz_crosshair_ads_hide_threshold")
+			.defineInRange("tacz_crosshair_ads_hide_threshold", 0.90D, 0.0D, 1.0D);
+
 		builder.pop();
 		builder.push("visibility");
-		
+
 		for (Perspective entry : Perspective.values()) {
 			String key = entry.toString().toLowerCase();
 			ConfigValue<CrosshairVisibility> crosshairVisibility = builder
@@ -115,58 +136,73 @@ public class CrosshairConfig implements ICrosshairConfig {
 				.defineEnum(entry.toString().toLowerCase(), entry.getDefaultCrosshairVisibility(), CrosshairVisibility.values());
 			this.crosshairVisibility.put(entry, crosshairVisibility);
 		}
-		
+
 		builder.pop();
 		builder.pop();
 	}
-	
+
 	@Override
 	public CrosshairVisibility getCrosshairVisibility(Perspective perspective) {
 		return this.crosshairVisibility.get(perspective).get();
 	}
-	
+
 	@Override
 	public CrosshairType getCrosshairType() {
 		return this.crosshairType.get();
 	}
-	
+
 	@Override
 	public List<? extends String> getAdaptiveCrosshairHoldItems() {
 		return this.adaptiveCrosshairHoldItems.get();
 	}
-	
+
 	@Override
 	public List<? extends String> getAdaptiveCrosshairUseItems() {
 		return this.adaptiveCrosshairUseItems.get();
 	}
-	
+
 	@Override
 	public List<? extends String> getAdaptiveCrosshairHoldItemProperties() {
 		return this.adaptiveCrosshairHoldItemProperties.get();
 	}
-	
+
 	@Override
 	public List<? extends String> getAdaptiveCrosshairUseItemProperties() {
 		return this.adaptiveCrosshairUseItemProperties.get();
 	}
-	
+
 	@Override
 	public boolean isObstructionIndicatorEnabled() {
 		return this.isObstructionIndicatorEnabled.get();
 	}
-	
+
 	@Override
 	public boolean isObstructionIndicatorOnlyShownWhenAiming() {
 		return this.isObstructionIndicatorOnlyShownWhenAiming.get();
 	}
-	
+
 	@Override
 	public double getObstructionIndicatorMaxDistanceToObstruction() {
 		return this.obstructionIndicatorMaxDistanceToObstruction.get();
 	}
-	
+
 	@Override
 	public int getObstructionIndicatorMinDistanceToCrosshair() {
 		return this.obstructionIndicatorMinDistanceToCrosshair.get();
+	}
+
+	@Override
+	public boolean isTaczCrosshairEnabled() {
+		return this.isTaczCrosshairEnabled.get();
+	}
+
+	@Override
+	public boolean hideTaczCrosshairDuringAds() {
+		return this.hideTaczCrosshairDuringAds.get();
+	}
+
+	@Override
+	public double getTaczCrosshairAdsHideThreshold() {
+		return this.taczCrosshairAdsHideThreshold.get();
 	}
 }
