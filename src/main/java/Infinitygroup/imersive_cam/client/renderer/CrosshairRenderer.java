@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +34,7 @@ import org.joml.Vector4f;
 import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 
 public class CrosshairRenderer implements ICrosshairRenderer {
+	private static final double OBSTRUCTION_DISTANCE_EPSILON = 1.0E-3D;
 	private static final ResourceLocation OBSTRUCTION_INDICATOR_SPRITE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/sprites/hud/obstruction_indicator.png");
 	private static final ItemStack OBSTRUCTED_BARRIER_ICON = new ItemStack(Items.BARRIER);
 	
@@ -42,6 +44,7 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 	private boolean isCrosshairVisible;
 	private boolean isObstructionCrosshairVisible;
 	private boolean isObstructionIndicatorVisible;
+	private boolean hasTrueBlockObstruction;
 	
 	public CrosshairRenderer(ImersiveCam instance) {
 		this.instance = instance;
@@ -54,9 +57,11 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 		this.isCrosshairVisible = true;
 		this.isObstructionCrosshairVisible = false;
 		this.isObstructionIndicatorVisible = false;
+		this.hasTrueBlockObstruction = false;
 	}
 	
 	public void renderTick(Camera camera, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, float partialTick) {
+		this.hasTrueBlockObstruction = false;
 		if (this.instance.isImersiveCam()) {
 			Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
 			this.isCrosshairDynamic = computeIsCrosshairDynamic(cameraEntity, this.instance.isAiming());
@@ -67,7 +72,7 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 		this.isCrosshairVisible = computeIsCrosshairVisible(this.crosshairOffset, this.isCrosshairDynamic, this.instance.isAiming());
 		if (this.instance.isImersiveCam()) {
 			this.isObstructionIndicatorVisible = computeIsObstructionIndicatorVisible(
-				this.crosshairOffset, this.isCrosshairDynamic, this.instance.isAiming()
+				this.crosshairOffset, this.isCrosshairDynamic, this.instance.isAiming(), this.hasTrueBlockObstruction
 			);
 			this.isObstructionCrosshairVisible = computeIsObstructionCrosshairVisible(
 				this.instance.isAiming(), this.isObstructionIndicatorVisible
@@ -140,26 +145,38 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 	}
 	
 	private void updateDynamicRaytrace(Camera camera, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, float partialTick) {
+		this.hasTrueBlockObstruction = false;
 		ObjectPickerConfig objectPickerConfig = Config.CLIENT.getObjectPickerConfig();
 		double interactionRangeOverride = objectPickerConfig.isCustomRaytraceDistanceEnabled()
 			? objectPickerConfig.getCustomRaytraceDistance()
 			: 0;
 		Player player = Minecraft.getInstance().player;
+		if (player == null) {
+			this.crosshairOffset = null;
+			return;
+		}
 		// Trace primary crosshair
 		PickContext.Builder pickContextBuilder = new PickContext.Builder(camera);
 		if (this.isCrosshairDynamic) {
 			pickContextBuilder.dynamicTrace();
 		}
-		PickContext pickContext = pickContextBuilder.build();
-		HitResult hitResult = this.instance.getObjectPicker().pick(pickContext, interactionRangeOverride, partialTick, player);
-		Vec3 position = hitResult.getLocation();
+		PickContext primaryContext = pickContextBuilder.build();
+		HitResult primaryHitResult = this.instance.getObjectPicker().pick(primaryContext, interactionRangeOverride, partialTick, player);
+		Vec3 primaryTargetPosition = primaryHitResult.getLocation();
+		Vec3 projectedPosition = primaryTargetPosition;
 		// Trace obstruction crosshair
-		if (!this.isCrosshairDynamic) {
-			pickContext = pickContextBuilder.obstructionTrace(position).build();
-			hitResult = this.instance.getObjectPicker().pick(pickContext, interactionRangeOverride, partialTick, player);
-			position = hitResult.getLocation();
+		if (!this.isCrosshairDynamic && primaryHitResult.getType() != HitResult.Type.MISS) {
+			Vec3 eyePosition = player.getEyePosition(partialTick);
+			PickContext obstructionContext = pickContextBuilder.obstructionTrace(primaryTargetPosition).build();
+			BlockHitResult obstructionBlockHit = this.instance.getObjectPicker().pickBlocks(
+				obstructionContext, eyePosition.distanceTo(primaryTargetPosition), partialTick
+			);
+			if (isTrueBlockObstruction(primaryHitResult, obstructionBlockHit, eyePosition, primaryTargetPosition)) {
+				this.hasTrueBlockObstruction = true;
+				projectedPosition = obstructionBlockHit.getLocation();
+			}
 		}
-		Vec2f projected = project2D(position.subtract(camera.getPosition()), modelViewMatrix, projectionMatrix);
+		Vec2f projected = project2D(projectedPosition.subtract(camera.getPosition()), modelViewMatrix, projectionMatrix);
 		Vec2f crosshairOffset = null;
 		if (projected != null) {
 			Window window = Minecraft.getInstance().getWindow();
@@ -167,7 +184,7 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 			Vec2f center = screenSize.divide(2);
 			CrosshairConfig crosshairConfig = Config.CLIENT.getCrosshairConfig();
 			double maxDistanceToObstruction = crosshairConfig.getObstructionIndicatorMaxDistanceToObstruction();
-			if (this.isCrosshairDynamic || !crosshairConfig.isObstructionIndicatorEnabled() || maxDistanceToObstruction <= 0 || position.distanceToSqr(player.getEyePosition()) <= maxDistanceToObstruction * maxDistanceToObstruction) {
+			if (this.isCrosshairDynamic || !crosshairConfig.isObstructionIndicatorEnabled() || maxDistanceToObstruction <= 0 || projectedPosition.distanceToSqr(player.getEyePosition()) <= maxDistanceToObstruction * maxDistanceToObstruction) {
 				crosshairOffset = projected.subtract(center).divide((float) window.getGuiScale());
 			}
 		}
@@ -201,7 +218,10 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 		};
 	}
 	
-	private static boolean computeIsObstructionIndicatorVisible(@Nullable Vec2f crosshairOffset, boolean isCrosshairDynamic, boolean isAiming) {
+	private static boolean computeIsObstructionIndicatorVisible(@Nullable Vec2f crosshairOffset, boolean isCrosshairDynamic, boolean isAiming, boolean hasTrueBlockObstruction) {
+		if (!hasTrueBlockObstruction) {
+			return false;
+		}
 		if (crosshairOffset == null || !Config.CLIENT.getCrosshairConfig().isObstructionIndicatorEnabled()) {
 			return false;
 		}
@@ -213,6 +233,23 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 		}
 		int minDistanceToCrosshair = Config.CLIENT.getCrosshairConfig().getObstructionIndicatorMinDistanceToCrosshair();
 		return crosshairOffset.lengthSquared() >= minDistanceToCrosshair * minDistanceToCrosshair;
+	}
+
+	private static boolean isTrueBlockObstruction(
+		HitResult primaryHitResult,
+		BlockHitResult obstructionHitResult,
+		Vec3 eyePosition,
+		Vec3 targetPosition
+	) {
+		if (obstructionHitResult.getType() != HitResult.Type.BLOCK) {
+			return false;
+		}
+		if (primaryHitResult instanceof BlockHitResult primaryBlockHit && primaryBlockHit.getBlockPos().equals(obstructionHitResult.getBlockPos())) {
+			return false;
+		}
+		double targetDistance = eyePosition.distanceTo(targetPosition);
+		double obstructionDistance = eyePosition.distanceTo(obstructionHitResult.getLocation());
+		return obstructionDistance + OBSTRUCTION_DISTANCE_EPSILON < targetDistance;
 	}
 	
 	private static boolean computeIsObstructionCrosshairVisible(boolean isAiming, boolean isObstructionIndicatorVisible) {
