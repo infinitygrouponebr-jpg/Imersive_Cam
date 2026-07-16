@@ -2,6 +2,7 @@ package Infinitygroup.imersive_cam.mixin;
 
 import Infinitygroup.imersive_cam.api.client.IImersiveCam;
 import Infinitygroup.imersive_cam.api.client.Perspective;
+import Infinitygroup.imersive_cam.compat.mts.MtsCompatBootstrap;
 import Infinitygroup.imersive_cam.config.Config;
 import Infinitygroup.imersive_cam.mixinduck.OptionsDuck;
 import net.minecraft.client.CameraType;
@@ -24,6 +25,9 @@ public abstract class OptionsMixin implements OptionsDuck {
 		cancellable = true
 	)
 	public void setCameraType(CameraType cameraType, CallbackInfo ci) {
+		if (MtsCompatBootstrap.shouldLetVanillaHandleCameraType(cameraType)) {
+			return;
+		}
 		if (cameraType != this.cameraType) {
 			boolean isImersiveCam = Config.CLIENT.getPerspectiveConfig().isThirdPersonReplaced() && cameraType == CameraType.THIRD_PERSON_BACK;
 			Perspective newPerspective = Perspective.of(cameraType, isImersiveCam);

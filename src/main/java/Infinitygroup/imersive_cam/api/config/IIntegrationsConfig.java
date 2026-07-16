@@ -8,4 +8,12 @@ public interface IIntegrationsConfig {
 	List<? extends String> getCuriosAdaptiveCrosshairItemProperties();
 	
 	boolean isEpicFightDecoupledCameraLockOnEnabled();
+
+	boolean isMtsCompatibilityEnabled();
+
+	double getMtsThirdPersonHeightOffset();
+
+	double getMtsThirdPersonDistanceOffset();
+
+	boolean isMtsCompatibilityDebugEnabled();
 }

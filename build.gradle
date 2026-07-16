@@ -106,6 +106,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     compileOnly "curse.maven:tacz-1-21-1-1353462:8387838"
     runtimeOnly "curse.maven:tacz-1-21-1-1353462:8387838"
+    compileOnly "curse.maven:minecraft-transport-simulator-286703:7926606"
+    runtimeOnly "curse.maven:minecraft-transport-simulator-286703:7926606"
 
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

@@ -26,7 +26,8 @@
     "MouseHandlerMixin",
     "OptionsMixin",
     "PlayerMixin",
-    "RenderTypeMixin"
+    "RenderTypeMixin",
+    "compat.mts.MtsCameraSetupMixin"
   ],
   "injectors": {
     "defaultRequire": 1

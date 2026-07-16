@@ -4,6 +4,7 @@ import Infinitygroup.imersive_cam.api.client.Perspective;
 import Infinitygroup.imersive_cam.api.math.Vec2f;
 import Infinitygroup.imersive_cam.client.ImersiveCam;
 import Infinitygroup.imersive_cam.client.ImersiveCamCamera;
+import Infinitygroup.imersive_cam.compat.mts.MtsCompatBootstrap;
 import Infinitygroup.imersive_cam.mixinduck.CameraDuck;
 import net.minecraft.client.Camera;
 import net.minecraft.util.Mth;
@@ -86,7 +87,9 @@ public abstract class CameraMixin implements CameraDuck {
 		float partialTick,
 		CallbackInfo ci
 	) {
-		if (Perspective.IMERSIVE_CAMERA == Perspective.current() && !(cameraEntity instanceof LivingEntity livingEntity && livingEntity.isSleeping())) {
+		if (Perspective.IMERSIVE_CAMERA == Perspective.current()
+			&& !MtsCompatBootstrap.shouldBypassImmersiveCameraSetup()
+			&& !(cameraEntity instanceof LivingEntity livingEntity && livingEntity.isSleeping())) {
 			Vec2f rotation = ImersiveCam.getInstance().getCamera().getRenderRotation();
 			this.setRotation(rotation.y(), rotation.x());
 		}
@@ -111,7 +114,9 @@ public abstract class CameraMixin implements CameraDuck {
 		boolean isMirrored,
 		float partialTick
 	) {
-		if (Perspective.IMERSIVE_CAMERA == Perspective.current() && !(cameraEntity instanceof LivingEntity livingEntity && livingEntity.isSleeping())) {
+		if (Perspective.IMERSIVE_CAMERA == Perspective.current()
+			&& !MtsCompatBootstrap.shouldBypassImmersiveCameraSetup()
+			&& !(cameraEntity instanceof LivingEntity livingEntity && livingEntity.isSleeping())) {
 			ImersiveCamCamera camera = ImersiveCam.getInstance().getCamera();
 			camera.setup(cameraIn, level, partialTick, cameraEntity);
 			Vec3 cameraOffset = camera.getRenderOffset();

@@ -9,6 +9,7 @@ import Infinitygroup.imersive_cam.api.util.EntityHelper;
 import Infinitygroup.imersive_cam.client.renderer.CameraEntityRenderer;
 import Infinitygroup.imersive_cam.client.renderer.CrosshairRenderer;
 import Infinitygroup.imersive_cam.client.world.phys.ObjectPicker;
+import Infinitygroup.imersive_cam.compat.mts.MtsCompatBootstrap;
 import Infinitygroup.imersive_cam.compat.tacz.TaczCompatBootstrap;
 import Infinitygroup.imersive_cam.config.Config;
 import Infinitygroup.imersive_cam.config.PerspectiveConfig;
@@ -103,6 +104,9 @@ public class ImersiveCam implements IImersiveCam {
 	}
 
 	private void enforceLockedPerspective(Minecraft minecraft) {
+		if (MtsCompatBootstrap.shouldBypassPerspectiveEnforcement()) {
+			return;
+		}
 		if (minecraft.level == null || minecraft.player == null) {
 			return;
 		}
