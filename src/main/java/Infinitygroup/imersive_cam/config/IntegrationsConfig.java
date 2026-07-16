@@ -56,4 +56,10 @@ public class IntegrationsConfig implements IIntegrationsConfig {
 	public boolean isEpicFightDecoupledCameraLockOnEnabled() {
 		return this.isEpicFightDecoupledCameraLockOnEnabled.get();
 	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.curiosAdaptiveCrosshairItems, this.curiosAdaptiveCrosshairItems.getDefault());
+		Config.CLIENT.set(this.curiosAdaptiveCrosshairItemProperties, this.curiosAdaptiveCrosshairItemProperties.getDefault());
+		Config.CLIENT.set(this.isEpicFightDecoupledCameraLockOnEnabled, this.isEpicFightDecoupledCameraLockOnEnabled.getDefault());
+	}
 }

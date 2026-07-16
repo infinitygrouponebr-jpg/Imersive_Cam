@@ -24,4 +24,8 @@ public class AudioConfig implements IAudioConfig {
 	public boolean isPlayerSoundCentered() {
 		return this.isPlayerSoundCentered.get();
 	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.isPlayerSoundCentered, this.isPlayerSoundCentered.getDefault());
+	}
 }

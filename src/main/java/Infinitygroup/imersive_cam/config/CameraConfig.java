@@ -808,6 +808,73 @@ public class CameraConfig implements ICameraConfig {
 	public double getCameraSwayZMaxVelocity() {
 		return this.cameraSwayZMaxVelocity.get();
 	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.offsetX, this.offsetX.getDefault());
+		Config.CLIENT.set(this.offsetY, this.offsetY.getDefault());
+		Config.CLIENT.set(this.offsetZ, this.offsetZ.getDefault());
+		Config.CLIENT.set(this.offsetXPresets, this.offsetXPresets.getDefault());
+		Config.CLIENT.set(this.offsetYPresets, this.offsetYPresets.getDefault());
+		Config.CLIENT.set(this.offsetZPresets, this.offsetZPresets.getDefault());
+		Config.CLIENT.set(this.minOffsetX, this.minOffsetX.getDefault());
+		Config.CLIENT.set(this.minOffsetY, this.minOffsetY.getDefault());
+		Config.CLIENT.set(this.minOffsetZ, this.minOffsetZ.getDefault());
+		Config.CLIENT.set(this.maxOffsetX, this.maxOffsetX.getDefault());
+		Config.CLIENT.set(this.maxOffsetY, this.maxOffsetY.getDefault());
+		Config.CLIENT.set(this.maxOffsetZ, this.maxOffsetZ.getDefault());
+		Config.CLIENT.set(this.isOffsetXUnlimited, this.isOffsetXUnlimited.getDefault());
+		Config.CLIENT.set(this.isOffsetYUnlimited, this.isOffsetYUnlimited.getDefault());
+		Config.CLIENT.set(this.isOffsetZUnlimited, this.isOffsetZUnlimited.getDefault());
+		Config.CLIENT.set(this.passengerOffsetXMultiplier, this.passengerOffsetXMultiplier.getDefault());
+		Config.CLIENT.set(this.passengerOffsetYMultiplier, this.passengerOffsetYMultiplier.getDefault());
+		Config.CLIENT.set(this.passengerOffsetZMultiplier, this.passengerOffsetZMultiplier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetXMultiplier, this.sprintOffsetXMultiplier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetYMultiplier, this.sprintOffsetYMultiplier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetZMultiplier, this.sprintOffsetZMultiplier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetXMultiplier, this.aimingOffsetXMultiplier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetYMultiplier, this.aimingOffsetYMultiplier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetZMultiplier, this.aimingOffsetZMultiplier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetXMultiplier, this.fallFlyingOffsetXMultiplier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetYMultiplier, this.fallFlyingOffsetYMultiplier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetZMultiplier, this.fallFlyingOffsetZMultiplier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetXMultiplier, this.climbingOffsetXMultiplier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetYMultiplier, this.climbingOffsetYMultiplier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetZMultiplier, this.climbingOffsetZMultiplier.getDefault());
+		Config.CLIENT.set(this.passengerOffsetXModifier, this.passengerOffsetXModifier.getDefault());
+		Config.CLIENT.set(this.passengerOffsetYModifier, this.passengerOffsetYModifier.getDefault());
+		Config.CLIENT.set(this.passengerOffsetZModifier, this.passengerOffsetZModifier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetXModifier, this.sprintOffsetXModifier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetYModifier, this.sprintOffsetYModifier.getDefault());
+		Config.CLIENT.set(this.sprintOffsetZModifier, this.sprintOffsetZModifier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetXModifier, this.aimingOffsetXModifier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetYModifier, this.aimingOffsetYModifier.getDefault());
+		Config.CLIENT.set(this.aimingOffsetZModifier, this.aimingOffsetZModifier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetXModifier, this.fallFlyingOffsetXModifier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetYModifier, this.fallFlyingOffsetYModifier.getDefault());
+		Config.CLIENT.set(this.fallFlyingOffsetZModifier, this.fallFlyingOffsetZModifier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetXModifier, this.climbingOffsetXModifier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetYModifier, this.climbingOffsetYModifier.getDefault());
+		Config.CLIENT.set(this.climbingOffsetZModifier, this.climbingOffsetZModifier.getDefault());
+		Config.CLIENT.set(this.keepCameraOutOfHeadMultiplier, this.keepCameraOutOfHeadMultiplier.getDefault());
+		Config.CLIENT.set(this.offsetStepSize, this.offsetStepSize.getDefault());
+		Config.CLIENT.set(this.cameraTransitionSpeedMultiplier, this.cameraTransitionSpeedMultiplier.getDefault());
+		Config.CLIENT.set(this.centerCameraWhenLookingDownAngle, this.centerCameraWhenLookingDownAngle.getDefault());
+		Config.CLIENT.set(this.isOffsetDynamic, this.isOffsetDynamic.getDefault());
+		Config.CLIENT.set(this.isCameraDecoupled, this.isCameraDecoupled.getDefault());
+		Config.CLIENT.set(this.isCameraOrientedOnTeleport, this.isCameraOrientedOnTeleport.getDefault());
+		Config.CLIENT.set(this.isFovOverrideEnabled, this.isFovOverrideEnabled.getDefault());
+		Config.CLIENT.set(this.fovOverride, this.fovOverride.getDefault());
+		Config.CLIENT.set(this.viewBobbingMode, this.viewBobbingMode.getDefault());
+		Config.CLIENT.set(this.isCameraTurningWithPlayer, this.isCameraTurningWithPlayer.getDefault());
+		Config.CLIENT.set(this.cameraTurningWithPlayerDelay, this.cameraTurningWithPlayerDelay.getDefault());
+		Config.CLIENT.set(this.cameraDragXMultiplier, this.cameraDragXMultiplier.getDefault());
+		Config.CLIENT.set(this.cameraDragYMultiplier, this.cameraDragYMultiplier.getDefault());
+		Config.CLIENT.set(this.cameraDragZMultiplier, this.cameraDragZMultiplier.getDefault());
+		Config.CLIENT.set(this.cameraSwayXMaxAngle, this.cameraSwayXMaxAngle.getDefault());
+		Config.CLIENT.set(this.cameraSwayZMaxAngle, this.cameraSwayZMaxAngle.getDefault());
+		Config.CLIENT.set(this.cameraSwayXMaxVelocity, this.cameraSwayXMaxVelocity.getDefault());
+		Config.CLIENT.set(this.cameraSwayZMaxVelocity, this.cameraSwayZMaxVelocity.getDefault());
+	}
 	
 	public void adjustCameraLeft() {
 		this.enforcePermanentCameraPosition();

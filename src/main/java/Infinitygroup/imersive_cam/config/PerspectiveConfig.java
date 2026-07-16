@@ -85,4 +85,13 @@ public class PerspectiveConfig implements IPerspectiveConfig {
 	public boolean isPerspectivePersistent() {
 		return this.isPerspectivePersistent.get();
 	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.defaultPerspective, this.defaultPerspective.getDefault());
+		Config.CLIENT.set(this.isPerspectivePersistent, this.isPerspectivePersistent.getDefault());
+		Config.CLIENT.set(this.isThirdPersonReplaced, this.isThirdPersonReplaced.getDefault());
+		Config.CLIENT.set(this.isFirstPersonEnabled, this.isFirstPersonEnabled.getDefault());
+		Config.CLIENT.set(this.isThirdPersonFrontEnabled, this.isThirdPersonFrontEnabled.getDefault());
+		Config.CLIENT.set(this.isThirdPersonBackEnabled, this.isThirdPersonBackEnabled.getDefault());
+	}
 }

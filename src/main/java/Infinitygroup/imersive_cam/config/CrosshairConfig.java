@@ -22,6 +22,8 @@ import java.util.Objects;
 import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 
 public class CrosshairConfig implements ICrosshairConfig {
+	private static final CrosshairType DEFAULT_CROSSHAIR_TYPE = CrosshairType.STATIC;
+
 	private final ConfigValue<CrosshairType> crosshairType;
 	private final ConfigValue<List<? extends String>> adaptiveCrosshairHoldItems;
 	private final ConfigValue<List<? extends String>> adaptiveCrosshairUseItems;
@@ -41,9 +43,9 @@ public class CrosshairConfig implements ICrosshairConfig {
 		builder.push("crosshair");
 
 		this.crosshairType = builder
-			.comment("Crosshair type to use for immersive camera. Dynamic is the default for the tactical side-offset profile so the center of the screen better matches the camera focus.")
+			.comment("Crosshair type to use for immersive camera.")
 			.translation(MOD_ID + ".configuration.crosshair.crosshair_type")
-			.defineEnum("crosshair_type", CrosshairType.DYNAMIC, CrosshairType.values());
+			.defineEnum("crosshair_type", DEFAULT_CROSSHAIR_TYPE, CrosshairType.values());
 
 		this.adaptiveCrosshairHoldItems = builder
 			.comment("Items that when held, trigger the dynamic crosshair in adaptive mode. This config option supports regular expressions. Example: 'minecraft:.*sword' matches 'minecraft:wooden_sword' and 'minecraft:netherite_sword'.")
@@ -204,5 +206,23 @@ public class CrosshairConfig implements ICrosshairConfig {
 	@Override
 	public double getTaczCrosshairAdsHideThreshold() {
 		return this.taczCrosshairAdsHideThreshold.get();
+	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.crosshairType, this.crosshairType.getDefault());
+		Config.CLIENT.set(this.adaptiveCrosshairHoldItems, this.adaptiveCrosshairHoldItems.getDefault());
+		Config.CLIENT.set(this.adaptiveCrosshairUseItems, this.adaptiveCrosshairUseItems.getDefault());
+		Config.CLIENT.set(this.adaptiveCrosshairHoldItemProperties, this.adaptiveCrosshairHoldItemProperties.getDefault());
+		Config.CLIENT.set(this.adaptiveCrosshairUseItemProperties, this.adaptiveCrosshairUseItemProperties.getDefault());
+		Config.CLIENT.set(this.isObstructionIndicatorEnabled, this.isObstructionIndicatorEnabled.getDefault());
+		Config.CLIENT.set(this.isObstructionIndicatorOnlyShownWhenAiming, this.isObstructionIndicatorOnlyShownWhenAiming.getDefault());
+		Config.CLIENT.set(this.obstructionIndicatorMinDistanceToCrosshair, this.obstructionIndicatorMinDistanceToCrosshair.getDefault());
+		Config.CLIENT.set(this.obstructionIndicatorMaxDistanceToObstruction, this.obstructionIndicatorMaxDistanceToObstruction.getDefault());
+		Config.CLIENT.set(this.isTaczCrosshairEnabled, this.isTaczCrosshairEnabled.getDefault());
+		Config.CLIENT.set(this.hideTaczCrosshairDuringAds, this.hideTaczCrosshairDuringAds.getDefault());
+		Config.CLIENT.set(this.taczCrosshairAdsHideThreshold, this.taczCrosshairAdsHideThreshold.getDefault());
+		for (ConfigValue<CrosshairVisibility> visibility : this.crosshairVisibility.values()) {
+			Config.CLIENT.set(visibility, visibility.getDefault());
+		}
 	}
 }

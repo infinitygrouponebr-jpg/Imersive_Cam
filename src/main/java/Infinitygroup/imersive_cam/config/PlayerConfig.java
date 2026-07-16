@@ -169,4 +169,20 @@ public class PlayerConfig implements IPlayerConfig {
 	public double getPlayerYRotTurnAngleLimit() {
 		return this.playerYRotTurnAngleLimit.get();
 	}
+
+	public void applyApprovedProfile() {
+		Config.CLIENT.set(this.hidePlayerWhenLookingUpAngle, this.hidePlayerWhenLookingUpAngle.getDefault());
+		Config.CLIENT.set(this.playerTransparency, this.playerTransparency.getDefault());
+		Config.CLIENT.set(this.isPlayerTransparentWhenAiming, this.isPlayerTransparentWhenAiming.getDefault());
+		Config.CLIENT.set(this.isPlayerTransparentWhenClimbing, this.isPlayerTransparentWhenClimbing.getDefault());
+		Config.CLIENT.set(this.turningModeWhenUsingItem, this.turningModeWhenUsingItem.getDefault());
+		Config.CLIENT.set(this.turningModeWhenAttacking, this.turningModeWhenAttacking.getDefault());
+		Config.CLIENT.set(this.turningModeWhenInteraction, this.turningModeWhenInteraction.getDefault());
+		Config.CLIENT.set(this.turningModeWhenPicking, this.turningModeWhenPicking.getDefault());
+		Config.CLIENT.set(this.turningLockTime, this.turningLockTime.getDefault());
+		Config.CLIENT.set(this.turningSpeedMultiplier, this.turningSpeedMultiplier.getDefault());
+		Config.CLIENT.set(this.isPlayerXRotTurningWithCamera, this.isPlayerXRotTurningWithCamera.getDefault());
+		Config.CLIENT.set(this.isPlayerYRotTurningWithCamera, this.isPlayerYRotTurningWithCamera.getDefault());
+		Config.CLIENT.set(this.playerYRotTurnAngleLimit, this.playerYRotTurnAngleLimit.getDefault());
+	}
 }
