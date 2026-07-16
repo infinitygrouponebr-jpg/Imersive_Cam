@@ -33,6 +33,13 @@ ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.${modId}]]
+modId = "tacz"
+type = "optional"
+versionRange = "[1.1.8,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.${modId}]]
 modId = "betterthirdperson"
 type = "incompatible"
 side = "CLIENT"

@@ -10,6 +10,14 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    maven {
+        name = "Curse Maven"
+        url = "https://www.cursemaven.com"
+
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 base {
@@ -96,6 +104,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
+    compileOnly "curse.maven:tacz-1-21-1-1353462:8387838"
+    runtimeOnly "curse.maven:tacz-1-21-1-1353462:8387838"
+
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"

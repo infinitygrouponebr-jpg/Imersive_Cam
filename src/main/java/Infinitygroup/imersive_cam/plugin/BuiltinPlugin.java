@@ -16,11 +16,13 @@ import Infinitygroup.imersive_cam.client.event.handler.ComputePlayerUseItemState
 import Infinitygroup.imersive_cam.client.event.handler.ComputeTargetCameraOffsetEventHandlerImpl;
 import Infinitygroup.imersive_cam.client.event.handler.ComputeTemporaryFirstPersonStateEventHandlerImpl;
 import Infinitygroup.imersive_cam.client.event.handler.SetupCameraRotationEventHandlerImpl;
+import Infinitygroup.imersive_cam.compat.tacz.TaczCompatBootstrap;
 
 public class BuiltinPlugin implements IImersiveCamPlugin {
 	@Override
 	public void register(IEventBus eventBus) {
 		eventBus.register(ComputePlayerAimStateEventHandlerImpl.INSTANCE);
+		TaczCompatBootstrap.registerIfPresent(eventBus);
 		eventBus.register(2000, SetupCameraRotationEventHandlerImpl.INSTANCE);
 		eventBus.register(ComputeCameraCouplingEventHandlerImpl.INSTANCE);
 		eventBus.register(1000, ComputeCameraEntityTransparencyEventHandlerImpl.INSTANCE);
