@@ -21,6 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -32,8 +34,7 @@ import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 
 public class CrosshairRenderer implements ICrosshairRenderer {
 	private static final ResourceLocation OBSTRUCTION_INDICATOR_SPRITE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/sprites/hud/obstruction_indicator.png");
-	private static final ResourceLocation OBSTRUCTED_CROSSHAIR_SPRITE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/sprites/hud/obstructed_crosshair.png");
-	private static final ResourceLocation OBSTRUCTED_CROSSHAIR_CROSS_SPRITE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/sprites/hud/obstructed_crosshair_cross.png");
+	private static final ItemStack OBSTRUCTED_BARRIER_ICON = new ItemStack(Items.BARRIER);
 	
 	private final ImersiveCam instance;
 	private Vec2f crosshairOffset;
@@ -110,12 +111,17 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 	}
 	
 	private void renderObstructionCrosshair(GuiGraphics guiGraphics) {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-		this.renderCustomCrosshair(guiGraphics, OBSTRUCTED_CROSSHAIR_SPRITE);
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.disableBlend();
-		this.renderCustomCrosshair(guiGraphics, OBSTRUCTED_CROSSHAIR_CROSS_SPRITE);
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.gameMode == null) {
+			return;
+		}
+		if (minecraft.gameMode.getPlayerMode() == GameType.SPECTATOR && !((GuiAccessor) minecraft.gui).invokeCanRenderCrosshairForSpectator(minecraft.hitResult)) {
+			return;
+		}
+		int iconSize = 16;
+		int x = (guiGraphics.guiWidth() - iconSize) / 2;
+		int y = (guiGraphics.guiHeight() - iconSize) / 2;
+		guiGraphics.renderItem(OBSTRUCTED_BARRIER_ICON, x, y);
 	}
 	
 	private void renderObstructionIndicator(GuiGraphics guiGraphics) {
