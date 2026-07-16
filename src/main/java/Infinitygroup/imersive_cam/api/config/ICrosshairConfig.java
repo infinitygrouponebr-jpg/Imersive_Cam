@@ -29,6 +29,8 @@ public interface ICrosshairConfig {
 
 	boolean isTaczCrosshairEnabled();
 
+	boolean isTaczShotAlignmentEnabled();
+
 	boolean hideTaczCrosshairDuringAds();
 
 	double getTaczCrosshairAdsHideThreshold();

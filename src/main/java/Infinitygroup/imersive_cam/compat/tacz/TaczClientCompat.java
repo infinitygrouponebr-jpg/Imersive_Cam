@@ -90,7 +90,7 @@ public final class TaczClientCompat implements ITaczClientCompat {
 		if (!IImersiveCam.getInstance().isImersiveCam()) {
 			return false;
 		}
-		if (!Config.CLIENT.getCrosshairConfig().isTaczCrosshairEnabled() || !IGun.mainHandHoldGun(player)) {
+		if (!Config.CLIENT.getCrosshairConfig().isTaczShotAlignmentEnabled() || !IGun.mainHandHoldGun(player)) {
 			return false;
 		}
 		if (!(player instanceof IGunOperator gunOperator) || isReloading(gunOperator)) {

@@ -1,5 +1,6 @@
 package Infinitygroup.imersive_cam.compat.tacz;
 
+import Infinitygroup.imersive_cam.api.client.renderer.CrosshairTargetSnapshot;
 import Infinitygroup.imersive_cam.client.ImersiveCam;
 import Infinitygroup.imersive_cam.config.Config;
 import com.tacz.guns.api.event.common.GunShootEvent;
@@ -29,12 +30,20 @@ public enum TaczShootAlignmentHandler {
 		if (!imersiveCam.isImersiveCam()) {
 			return;
 		}
-		if (!Config.CLIENT.getCrosshairConfig().isTaczCrosshairEnabled()) {
+		if (!Config.CLIENT.getCrosshairConfig().isTaczShotAlignmentEnabled()) {
 			return;
 		}
 		if (!IGun.mainHandHoldGun(player)) {
 			return;
 		}
-		imersiveCam.lookAtCrosshairTarget();
+		CrosshairTargetSnapshot snapshot = imersiveCam
+			.getCrosshairRenderer()
+			.getCrosshairTargetSnapshot();
+		TaczAimSyncState.INSTANCE.lockTarget(snapshot, TaczAimSyncState.DEFAULT_SYNC_HOLD_TICKS);
+		boolean aligned = imersiveCam.alignPlayerToCrosshairSnapshot(snapshot);
+		if (!aligned) {
+			imersiveCam.lookAtCrosshairTarget();
+		}
+		TaczAimSyncState.INSTANCE.syncImmediately(imersiveCam);
 	}
 }

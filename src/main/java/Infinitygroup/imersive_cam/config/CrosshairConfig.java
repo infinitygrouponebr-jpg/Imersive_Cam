@@ -36,6 +36,7 @@ public class CrosshairConfig implements ICrosshairConfig {
 	private final IntValue obstructionIndicatorMinDistanceToCrosshair;
 	private final DoubleValue obstructionIndicatorMaxDistanceToObstruction;
 	private final BooleanValue isTaczCrosshairEnabled;
+	private final BooleanValue isTaczShotAlignmentEnabled;
 	private final BooleanValue hideTaczCrosshairDuringAds;
 	private final DoubleValue taczCrosshairAdsHideThreshold;
 
@@ -116,6 +117,11 @@ public class CrosshairConfig implements ICrosshairConfig {
 			.comment("Whether to render the Immersive Cam crosshair for TaCZ guns in immersive camera perspective.")
 			.translation(MOD_ID + ".configuration.crosshair.tacz.enable_tacz_crosshair")
 			.define("enable_tacz_crosshair", true);
+
+		this.isTaczShotAlignmentEnabled = builder
+			.comment("Whether to align TaCZ gunfire to the Immersive Cam crosshair target in immersive camera perspective.")
+			.translation(MOD_ID + ".configuration.crosshair.tacz.enable_tacz_shot_alignment")
+			.define("enable_tacz_shot_alignment", true);
 
 		this.hideTaczCrosshairDuringAds = builder
 			.comment("Whether to fade and hide the Immersive Cam TaCZ crosshair during ADS.")
@@ -199,6 +205,11 @@ public class CrosshairConfig implements ICrosshairConfig {
 	}
 
 	@Override
+	public boolean isTaczShotAlignmentEnabled() {
+		return this.isTaczShotAlignmentEnabled.get();
+	}
+
+	@Override
 	public boolean hideTaczCrosshairDuringAds() {
 		return this.hideTaczCrosshairDuringAds.get();
 	}
@@ -219,6 +230,7 @@ public class CrosshairConfig implements ICrosshairConfig {
 		Config.CLIENT.set(this.obstructionIndicatorMinDistanceToCrosshair, this.obstructionIndicatorMinDistanceToCrosshair.getDefault());
 		Config.CLIENT.set(this.obstructionIndicatorMaxDistanceToObstruction, this.obstructionIndicatorMaxDistanceToObstruction.getDefault());
 		Config.CLIENT.set(this.isTaczCrosshairEnabled, this.isTaczCrosshairEnabled.getDefault());
+		Config.CLIENT.set(this.isTaczShotAlignmentEnabled, this.isTaczShotAlignmentEnabled.getDefault());
 		Config.CLIENT.set(this.hideTaczCrosshairDuringAds, this.hideTaczCrosshairDuringAds.getDefault());
 		Config.CLIENT.set(this.taczCrosshairAdsHideThreshold, this.taczCrosshairAdsHideThreshold.getDefault());
 		for (ConfigValue<CrosshairVisibility> visibility : this.crosshairVisibility.values()) {

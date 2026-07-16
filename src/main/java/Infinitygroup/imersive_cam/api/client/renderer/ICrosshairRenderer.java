@@ -13,4 +13,6 @@ public interface ICrosshairRenderer {
 	boolean isCrosshairDynamic();
 
 	@Nullable Vec2f getCrosshairOffset();
+
+	@Nullable CrosshairTargetSnapshot getCrosshairTargetSnapshot();
 }

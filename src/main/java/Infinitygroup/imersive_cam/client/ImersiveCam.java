@@ -2,6 +2,7 @@ package Infinitygroup.imersive_cam.client;
 
 import Infinitygroup.imersive_cam.api.client.IImersiveCam;
 import Infinitygroup.imersive_cam.api.client.Perspective;
+import Infinitygroup.imersive_cam.api.client.renderer.CrosshairTargetSnapshot;
 import Infinitygroup.imersive_cam.api.client.world.phys.PickContext;
 import Infinitygroup.imersive_cam.api.config.IClientConfig;
 import Infinitygroup.imersive_cam.api.util.EntityHelper;
@@ -20,7 +21,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class ImersiveCam implements IImersiveCam {
@@ -124,18 +127,67 @@ public class ImersiveCam implements IImersiveCam {
 	private void lookAtCrosshairTargetInternal() {
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;
-		assert player != null;
+		if (player == null || minecraft.level == null) {
+			return;
+		}
+		CrosshairTargetSnapshot snapshot = this.crosshairRenderer.getCrosshairTargetSnapshot();
+		Vec3 target = this.isFreshTarget(snapshot, minecraft.level)
+			? snapshot.position()
+			: this.computeFallbackCrosshairTarget(player);
+		if (!isValidTarget(player, target)) {
+			return;
+		}
+		this.alignPlayerToWorldTarget(player, target);
+	}
+
+	@Nullable
+	private Vec3 computeFallbackCrosshairTarget(LocalPlayer player) {
+		Minecraft minecraft = Minecraft.getInstance();
+		if (minecraft.level == null) {
+			return null;
+		}
 		Camera camera = minecraft.gameRenderer.getMainCamera();
 		double interactionRange = Config.CLIENT.getCrosshairConfig().getCrosshairType().isAimingDecoupled()
 			? 400
 			: Config.CLIENT.getObjectPickerConfig().getCustomRaytraceDistance();
 		PickContext pickContext = new PickContext.Builder(camera).build();
 		HitResult hitResult = this.objectPicker.pick(pickContext, interactionRange, 1.0F, player);
+		return hitResult.getLocation();
+	}
+
+	public boolean alignPlayerToCrosshairSnapshot(@Nullable CrosshairTargetSnapshot snapshot) {
+		Minecraft minecraft = Minecraft.getInstance();
+		LocalPlayer player = minecraft.player;
+		if (player == null || minecraft.level == null) {
+			return false;
+		}
+		if (!this.isFreshTarget(snapshot, minecraft.level)) {
+			return false;
+		}
+		Vec3 target = snapshot.position();
+		if (!isValidTarget(player, target)) {
+			return false;
+		}
+		this.alignPlayerToWorldTarget(player, target);
+		return true;
+	}
+
+	private boolean isFreshTarget(@Nullable CrosshairTargetSnapshot snapshot, Level level) {
+		return this.crosshairRenderer.isCrosshairTargetFresh(snapshot, level);
+	}
+
+	private void alignPlayerToWorldTarget(LocalPlayer player, Vec3 target) {
 		this.playerXRotO = player.getXRot();
 		this.playerYRotO = player.getYRot();
 		this.updatePlayerRotations = true;
-		EntityHelper.lookAtTarget(player, hitResult.getLocation());
+		EntityHelper.lookAtTarget(player, target);
 		this.camera.setLastMovedYRot(player.getYRot());
+	}
+
+	private static boolean isValidTarget(LocalPlayer player, @Nullable Vec3 target) {
+		return target != null
+			&& CrosshairRenderer.isFinite(target)
+			&& target.distanceToSqr(player.getEyePosition()) > 1.0E-6D;
 	}
 	
 	public void updatePlayerRotations() {

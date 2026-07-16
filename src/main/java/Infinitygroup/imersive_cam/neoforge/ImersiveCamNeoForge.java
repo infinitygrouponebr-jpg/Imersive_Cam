@@ -3,6 +3,7 @@ package Infinitygroup.imersive_cam.neoforge;
 import Infinitygroup.imersive_cam.ImersiveCamCommon;
 import Infinitygroup.imersive_cam.client.InputHandler;
 import Infinitygroup.imersive_cam.client.ImersiveCam;
+import Infinitygroup.imersive_cam.compat.tacz.TaczAimDirectionPayload;
 import Infinitygroup.imersive_cam.config.Config;
 import Infinitygroup.imersive_cam.neoforge.event.ClientEventHandler;
 import net.neoforged.api.distmarker.Dist;
@@ -23,6 +24,7 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod(value = ImersiveCamCommon.MOD_ID, dist = Dist.CLIENT)
 public class ImersiveCamNeoForge {
 	public ImersiveCamNeoForge(ModContainer modContainer, IEventBus modEventBus) {
+		modEventBus.addListener(TaczAimDirectionPayload::register);
 		if (FMLEnvironment.dist.isClient()) {
 			modEventBus.addListener(this::clientSetup);
 			modEventBus.addListener(this::registerKeyMappingsEvent);

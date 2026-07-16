@@ -21,8 +21,11 @@ public final class TaczCompatBootstrap {
 		clientCompat = new TaczClientCompat();
 		TaczAimStateEventHandler.register(eventBus);
 		eventBus.register(-5500, TaczShoulderCameraOffsetHandler.INSTANCE);
+		eventBus.register(TaczAimSyncState.INSTANCE);
 		if (!forgeEventsRegistered) {
 			NeoForge.EVENT_BUS.register(TaczShootAlignmentHandler.INSTANCE);
+			NeoForge.EVENT_BUS.register(TaczServerAimState.INSTANCE);
+			NeoForge.EVENT_BUS.register(TaczServerFireAlignmentHandler.INSTANCE);
 			forgeEventsRegistered = true;
 		}
 		ImersiveCamCommon.LOGGER.info("TaCZ detected; ADS, crosshair and shot alignment enabled");

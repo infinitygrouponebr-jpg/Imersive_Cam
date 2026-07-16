@@ -2,6 +2,7 @@ package Infinitygroup.imersive_cam.client.renderer;
 
 import Infinitygroup.imersive_cam.api.client.CrosshairType;
 import Infinitygroup.imersive_cam.api.client.Perspective;
+import Infinitygroup.imersive_cam.api.client.renderer.CrosshairTargetSnapshot;
 import Infinitygroup.imersive_cam.api.client.renderer.ICrosshairRenderer;
 import Infinitygroup.imersive_cam.api.client.world.phys.PickContext;
 import Infinitygroup.imersive_cam.api.math.Vec2f;
@@ -18,12 +19,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -35,6 +38,8 @@ import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 
 public class CrosshairRenderer implements ICrosshairRenderer {
 	private static final double OBSTRUCTION_DISTANCE_EPSILON = 1.0E-3D;
+	private static final double MIN_CROSSHAIR_TARGET_DISTANCE_SQR = 1.0E-6D;
+	private static final long MAX_CROSSHAIR_TARGET_AGE_TICKS = 2L;
 	private static final ResourceLocation OBSTRUCTION_INDICATOR_SPRITE = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/gui/sprites/hud/obstruction_indicator.png");
 	private static final ItemStack OBSTRUCTED_BARRIER_ICON = new ItemStack(Items.BARRIER);
 
@@ -45,6 +50,11 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 	private boolean isObstructionCrosshairVisible;
 	private boolean isObstructionIndicatorVisible;
 	private boolean hasTrueBlockObstruction;
+	@Nullable
+	private Vec3 crosshairWorldTarget;
+	private long crosshairWorldTargetGameTime;
+	@Nullable
+	private ResourceKey<Level> crosshairWorldTargetDimension;
 
 	public CrosshairRenderer(ImersiveCam instance) {
 		this.instance = instance;
@@ -58,16 +68,23 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 		this.isObstructionCrosshairVisible = false;
 		this.isObstructionIndicatorVisible = false;
 		this.hasTrueBlockObstruction = false;
+		this.clearCrosshairWorldTarget();
 	}
 
 	public void renderTick(Camera camera, Matrix4f modelViewMatrix, Matrix4f projectionMatrix, float partialTick) {
 		this.hasTrueBlockObstruction = false;
+		Minecraft minecraft = Minecraft.getInstance();
 		if (this.instance.isImersiveCam()) {
-			Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
+			Entity cameraEntity = minecraft.getCameraEntity();
 			this.isCrosshairDynamic = computeIsCrosshairDynamic(cameraEntity, this.instance.isAiming());
-			if (Minecraft.getInstance().player != null) {
+			if (minecraft.level != null && minecraft.player != null) {
 				this.updateDynamicRaytrace(camera, modelViewMatrix, projectionMatrix, partialTick);
+			} else {
+				this.crosshairOffset = null;
+				this.clearCrosshairWorldTarget();
 			}
+		} else {
+			this.clearCrosshairWorldTarget();
 		}
 		this.isCrosshairVisible = computeIsCrosshairVisible(this.crosshairOffset, this.isCrosshairDynamic, this.instance.isAiming());
 		if (this.instance.isImersiveCam()) {
@@ -151,8 +168,9 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 			? objectPickerConfig.getCustomRaytraceDistance()
 			: 0;
 		Player player = Minecraft.getInstance().player;
-		if (player == null) {
+		if (player == null || player.level() == null) {
 			this.crosshairOffset = null;
+			this.clearCrosshairWorldTarget();
 			return;
 		}
 		// Trace primary crosshair
@@ -176,6 +194,11 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 				projectedPosition = obstructionBlockHit.getLocation();
 			}
 		}
+		if (!isFinite(projectedPosition) || projectedPosition.distanceToSqr(player.getEyePosition(partialTick)) <= MIN_CROSSHAIR_TARGET_DISTANCE_SQR) {
+			this.crosshairOffset = null;
+			this.clearCrosshairWorldTarget();
+			return;
+		}
 		Vec2f projected = project2D(projectedPosition.subtract(camera.getPosition()), modelViewMatrix, projectionMatrix);
 		Vec2f crosshairOffset = null;
 		if (projected != null) {
@@ -189,6 +212,13 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 			}
 		}
 		this.crosshairOffset = crosshairOffset;
+		if (crosshairOffset != null) {
+			this.crosshairWorldTarget = new Vec3(projectedPosition.x(), projectedPosition.y(), projectedPosition.z());
+			this.crosshairWorldTargetGameTime = player.level().getGameTime();
+			this.crosshairWorldTargetDimension = player.level().dimension();
+		} else {
+			this.clearCrosshairWorldTarget();
+		}
 	}
 
 	public void resetState() {
@@ -279,6 +309,43 @@ public class CrosshairRenderer implements ICrosshairRenderer {
 	@Override
 	public @Nullable Vec2f getCrosshairOffset() {
 		return this.crosshairOffset;
+	}
+
+	@Override
+	public @Nullable CrosshairTargetSnapshot getCrosshairTargetSnapshot() {
+		if (this.crosshairWorldTarget == null || this.crosshairWorldTargetDimension == null || !isFinite(this.crosshairWorldTarget)) {
+			return null;
+		}
+		return new CrosshairTargetSnapshot(
+			new Vec3(this.crosshairWorldTarget.x(), this.crosshairWorldTarget.y(), this.crosshairWorldTarget.z()),
+			this.crosshairWorldTargetDimension,
+			this.crosshairWorldTargetGameTime
+		);
+	}
+
+	public boolean isCrosshairTargetFresh(@Nullable CrosshairTargetSnapshot snapshot, Level level) {
+		if (snapshot == null) {
+			return false;
+		}
+		if (!snapshot.dimension().equals(level.dimension())) {
+			return false;
+		}
+		long age = level.getGameTime() - snapshot.gameTime();
+		return age >= 0L
+			&& age <= MAX_CROSSHAIR_TARGET_AGE_TICKS
+			&& isFinite(snapshot.position());
+	}
+
+	private void clearCrosshairWorldTarget() {
+		this.crosshairWorldTarget = null;
+		this.crosshairWorldTargetGameTime = Long.MIN_VALUE;
+		this.crosshairWorldTargetDimension = null;
+	}
+
+	public static boolean isFinite(Vec3 position) {
+		return Double.isFinite(position.x())
+			&& Double.isFinite(position.y())
+			&& Double.isFinite(position.z());
 	}
 
 	private static @Nullable Vec2f project2D(Vec3 position, Matrix4f modelView, Matrix4f projection) {
