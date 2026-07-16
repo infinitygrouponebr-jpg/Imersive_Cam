@@ -9,9 +9,11 @@ import java.util.PriorityQueue;
 import java.util.function.Consumer;
 
 class HandlerList {
-	private final PriorityQueue<EventHandler> handlers = new PriorityQueue<EventHandler>(
-		Comparator.comparing(EventHandler::priority).thenComparing(EventHandler::index)
-	);
+	private static final Comparator<EventHandler> HANDLER_ORDER = Comparator
+		.comparing(EventHandler::priority)
+		.thenComparing(EventHandler::index);
+
+	private final PriorityQueue<EventHandler> handlers = new PriorityQueue<EventHandler>(HANDLER_ORDER);
 	private final boolean cancellable;
 	
 	public HandlerList(boolean cancellable) {
@@ -27,6 +29,8 @@ class HandlerList {
 	}
 	
 	public Collection<EventHandler> getListeners() {
-		return this.handlers;
+		return this.handlers.stream()
+			.sorted(HANDLER_ORDER)
+			.toList();
 	}
 }

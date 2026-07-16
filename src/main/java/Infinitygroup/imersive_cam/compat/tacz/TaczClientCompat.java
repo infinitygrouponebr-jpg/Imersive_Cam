@@ -65,6 +65,22 @@ public final class TaczClientCompat implements ITaczClientCompat {
 	}
 
 	@Override
+	public boolean shouldUseShoulderCamera() {
+		Minecraft minecraft = Minecraft.getInstance();
+		LocalPlayer player = minecraft.player;
+		if (minecraft.level == null || player == null || !player.isAlive() || player.isSpectator()) {
+			return false;
+		}
+		if (!IImersiveCam.getInstance().isImersiveCam()) {
+			return false;
+		}
+		if (!Config.CLIENT.getCameraConfig().isTaczShoulderCameraEnabled()) {
+			return false;
+		}
+		return IGun.mainHandHoldGun(player);
+	}
+
+	@Override
 	public boolean shouldAlignGunfireToCrosshair() {
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;

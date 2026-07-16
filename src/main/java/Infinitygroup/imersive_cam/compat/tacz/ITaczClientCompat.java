@@ -9,5 +9,7 @@ public interface ITaczClientCompat {
 	
 	float getGunCrosshairAlpha(float partialTick);
 
+	boolean shouldUseShoulderCamera();
+
 	boolean shouldAlignGunfireToCrosshair();
 }

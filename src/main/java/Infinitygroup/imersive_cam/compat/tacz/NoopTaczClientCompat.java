@@ -22,6 +22,11 @@ public final class NoopTaczClientCompat implements ITaczClientCompat {
 	}
 
 	@Override
+	public boolean shouldUseShoulderCamera() {
+		return false;
+	}
+
+	@Override
 	public boolean shouldAlignGunfireToCrosshair() {
 		return false;
 	}

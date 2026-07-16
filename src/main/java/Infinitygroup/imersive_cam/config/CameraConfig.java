@@ -3,6 +3,7 @@ package Infinitygroup.imersive_cam.config;
 import Infinitygroup.imersive_cam.api.client.ViewBobbingMode;
 import Infinitygroup.imersive_cam.api.config.ICameraConfig;
 import Infinitygroup.imersive_cam.config.Config.ClientConfig;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
@@ -20,6 +21,10 @@ public class CameraConfig implements ICameraConfig {
 	private static final double PERMANENT_OFFSET_Y = 3.00D;
 	private static final double PERMANENT_OFFSET_Z = 4.00D;
 	private static final double PERMANENT_TRANSITION_SPEED = 0.40D;
+	private static final boolean DEFAULT_TACZ_SHOULDER_CAMERA_ENABLED = true;
+	private static final double DEFAULT_TACZ_GUN_OFFSET_X_MODIFIER = -1.15D;
+	private static final double DEFAULT_TACZ_GUN_OFFSET_Y_MODIFIER = -0.35D;
+	private static final double DEFAULT_TACZ_GUN_OFFSET_Z_MODIFIER = -0.75D;
 
 	private final DoubleValue offsetX;
 	private final DoubleValue offsetY;
@@ -80,6 +85,11 @@ public class CameraConfig implements ICameraConfig {
 	private final DoubleValue climbingOffsetXModifier;
 	private final DoubleValue climbingOffsetYModifier;
 	private final DoubleValue climbingOffsetZModifier;
+
+	private final BooleanValue isTaczShoulderCameraEnabled;
+	private final DoubleValue taczGunOffsetXModifier;
+	private final DoubleValue taczGunOffsetYModifier;
+	private final DoubleValue taczGunOffsetZModifier;
 	
 	private final DoubleValue keepCameraOutOfHeadMultiplier;
 	private final DoubleValue offsetStepSize;
@@ -376,6 +386,29 @@ public class CameraConfig implements ICameraConfig {
 			.translation(MOD_ID + ".configuration.camera.offset.modifier.climbing.modifier_offset_z")
 			.defineInRange("modifier_offset_z", 0.0D, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
+		builder.pop();
+		builder.push("tacz_gun");
+
+		this.isTaczShoulderCameraEnabled = builder
+			.comment("Whether to apply the TaCZ gun shoulder camera offset in immersive camera perspective.")
+			.translation(MOD_ID + ".configuration.camera.offset.modifier.tacz_gun.enabled")
+			.define("enabled", DEFAULT_TACZ_SHOULDER_CAMERA_ENABLED);
+
+		this.taczGunOffsetXModifier = builder
+			.comment("x-offset modifier for when the local player holds a TaCZ gun in the main hand.")
+			.translation(MOD_ID + ".configuration.camera.offset.modifier.tacz_gun.modifier_offset_x")
+			.defineInRange("modifier_offset_x", DEFAULT_TACZ_GUN_OFFSET_X_MODIFIER, -Double.MAX_VALUE, Double.MAX_VALUE);
+
+		this.taczGunOffsetYModifier = builder
+			.comment("y-offset modifier for when the local player holds a TaCZ gun in the main hand.")
+			.translation(MOD_ID + ".configuration.camera.offset.modifier.tacz_gun.modifier_offset_y")
+			.defineInRange("modifier_offset_y", DEFAULT_TACZ_GUN_OFFSET_Y_MODIFIER, -Double.MAX_VALUE, Double.MAX_VALUE);
+
+		this.taczGunOffsetZModifier = builder
+			.comment("z-offset modifier for when the local player holds a TaCZ gun in the main hand.")
+			.translation(MOD_ID + ".configuration.camera.offset.modifier.tacz_gun.modifier_offset_z")
+			.defineInRange("modifier_offset_z", DEFAULT_TACZ_GUN_OFFSET_Z_MODIFIER, -Double.MAX_VALUE, Double.MAX_VALUE);
+
 		builder.pop();
 		builder.pop();
 		
@@ -712,6 +745,18 @@ public class CameraConfig implements ICameraConfig {
 	@Override
 	public double getClimbingOffsetZModifier() {
 		return this.climbingOffsetZModifier.get();
+	}
+
+	public boolean isTaczShoulderCameraEnabled() {
+		return this.isTaczShoulderCameraEnabled.get();
+	}
+
+	public Vec3 getTaczGunOffsetModifiers() {
+		return new Vec3(
+			this.taczGunOffsetXModifier.get(),
+			this.taczGunOffsetYModifier.get(),
+			this.taczGunOffsetZModifier.get()
+		);
 	}
 	
 	@Override

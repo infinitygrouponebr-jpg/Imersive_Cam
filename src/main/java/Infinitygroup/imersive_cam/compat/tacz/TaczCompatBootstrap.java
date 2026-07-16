@@ -20,6 +20,7 @@ public final class TaczCompatBootstrap {
 		}
 		clientCompat = new TaczClientCompat();
 		TaczAimStateEventHandler.register(eventBus);
+		eventBus.register(-5500, TaczShoulderCameraOffsetHandler.INSTANCE);
 		if (!forgeEventsRegistered) {
 			NeoForge.EVENT_BUS.register(TaczShootAlignmentHandler.INSTANCE);
 			forgeEventsRegistered = true;
