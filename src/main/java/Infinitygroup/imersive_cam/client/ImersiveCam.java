@@ -8,6 +8,7 @@ import Infinitygroup.imersive_cam.api.util.EntityHelper;
 import Infinitygroup.imersive_cam.client.renderer.CameraEntityRenderer;
 import Infinitygroup.imersive_cam.client.renderer.CrosshairRenderer;
 import Infinitygroup.imersive_cam.client.world.phys.ObjectPicker;
+import Infinitygroup.imersive_cam.compat.tacz.TaczCompatBootstrap;
 import Infinitygroup.imersive_cam.config.Config;
 import Infinitygroup.imersive_cam.config.PerspectiveConfig;
 import Infinitygroup.imersive_cam.config.PlayerConfig;
@@ -74,11 +75,13 @@ public class ImersiveCam implements IImersiveCam {
 		Entity cameraEntity = minecraft.getCameraEntity();
 		this.isAiming = computeIsAiming(cameraEntity);
 		LocalPlayer player = minecraft.player;
+		boolean shouldAlignTaczGunfire = TaczCompatBootstrap.getClientCompat().shouldAlignGunfireToCrosshair();
 		this.updatePlayerRotations = false;
 		this.isCameraDecoupled = computeIsCameraDecoupled(cameraEntity, this.isImersiveCam, this.isAiming);
 		if (this.isImersiveCam && player != null) {
-			this.isLookFollowingCrosshairTarget = computeIsLookFollowingCrosshairTarget(cameraEntity, this.isAiming);
-			this.isFreeLooking = InputHandler.FREE_LOOK.isDown() && !this.isAiming;
+			this.isLookFollowingCrosshairTarget =
+				computeIsLookFollowingCrosshairTarget(cameraEntity, this.isAiming) || shouldAlignTaczGunfire;
+			this.isFreeLooking = InputHandler.FREE_LOOK.isDown() && !this.isAiming && !shouldAlignTaczGunfire;
 			this.camera.tick();
 			if (!this.isFreeLooking && cameraEntity == player) {
 				if (this.isLookFollowingCrosshairTarget()) {

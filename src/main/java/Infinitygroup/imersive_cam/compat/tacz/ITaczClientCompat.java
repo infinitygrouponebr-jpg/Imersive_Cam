@@ -8,4 +8,6 @@ public interface ITaczClientCompat {
 	boolean shouldRenderGunCrosshair(float partialTick);
 	
 	float getGunCrosshairAlpha(float partialTick);
+
+	boolean shouldAlignGunfireToCrosshair();
 }

@@ -63,6 +63,25 @@ public final class TaczClientCompat implements ITaczClientCompat {
 		float hideThreshold = (float) Config.CLIENT.getCrosshairConfig().getTaczCrosshairAdsHideThreshold();
 		return calcAdsAlpha(aimingProgress, hideThreshold);
 	}
+
+	@Override
+	public boolean shouldAlignGunfireToCrosshair() {
+		Minecraft minecraft = Minecraft.getInstance();
+		LocalPlayer player = minecraft.player;
+		if (minecraft.level == null || player == null || !player.isAlive() || player.isSpectator()) {
+			return false;
+		}
+		if (!IImersiveCam.getInstance().isImersiveCam()) {
+			return false;
+		}
+		if (!Config.CLIENT.getCrosshairConfig().isTaczCrosshairEnabled() || !IGun.mainHandHoldGun(player)) {
+			return false;
+		}
+		if (!(player instanceof IGunOperator gunOperator) || isReloading(gunOperator)) {
+			return false;
+		}
+		return minecraft.options.keyAttack.isDown();
+	}
 	
 	private static boolean isReloading(IGunOperator operator) {
 		ReloadState reloadState = operator.getSynReloadState();

@@ -20,4 +20,9 @@ public final class NoopTaczClientCompat implements ITaczClientCompat {
 	public float getGunCrosshairAlpha(float partialTick) {
 		return 0.0F;
 	}
+
+	@Override
+	public boolean shouldAlignGunfireToCrosshair() {
+		return false;
+	}
 }

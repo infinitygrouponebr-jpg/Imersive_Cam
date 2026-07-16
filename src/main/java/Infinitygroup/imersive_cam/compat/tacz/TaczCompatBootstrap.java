@@ -3,10 +3,12 @@ package Infinitygroup.imersive_cam.compat.tacz;
 import Infinitygroup.imersive_cam.ImersiveCamCommon;
 import Infinitygroup.imersive_cam.api.event.IEventBus;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.NeoForge;
 
 public final class TaczCompatBootstrap {
 	private static final String TACZ_MOD_ID = "tacz";
 	private static ITaczClientCompat clientCompat = new NoopTaczClientCompat();
+	private static boolean forgeEventsRegistered;
 
 	private TaczCompatBootstrap() {
 	}
@@ -18,7 +20,11 @@ public final class TaczCompatBootstrap {
 		}
 		clientCompat = new TaczClientCompat();
 		TaczAimStateEventHandler.register(eventBus);
-		ImersiveCamCommon.LOGGER.info("TaCZ detected; ADS compatibility enabled");
+		if (!forgeEventsRegistered) {
+			NeoForge.EVENT_BUS.register(TaczShootAlignmentHandler.INSTANCE);
+			forgeEventsRegistered = true;
+		}
+		ImersiveCamCommon.LOGGER.info("TaCZ detected; ADS, crosshair and shot alignment enabled");
 	}
 
 	public static ITaczClientCompat getClientCompat() {
