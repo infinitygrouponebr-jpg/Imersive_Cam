@@ -11,9 +11,25 @@ public interface IIntegrationsConfig {
 
 	boolean isMtsCompatibilityEnabled();
 
+	boolean isMtsCameraCompatibilityEnabled();
+
 	double getMtsThirdPersonHeightOffset();
 
 	double getMtsThirdPersonDistanceOffset();
+
+	boolean isMtsCameraSmoothingEnabled();
+
+	double getMtsPositionSmoothing();
+
+	double getMtsRotationSmoothing();
+
+	double getMtsMaximumYawSpeed();
+
+	double getMtsTurnDeadzoneDegrees();
+
+	double getMtsVehicleRotationFollow();
+
+	boolean isMtsUseFreeThirdPerson();
 
 	boolean isMtsCompatibilityDebugEnabled();
 }

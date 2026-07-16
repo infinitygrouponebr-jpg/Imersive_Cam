@@ -44,10 +44,6 @@ public final class MtsCompatBootstrap {
 		return getClientCompat().shouldLetVanillaHandleCameraType(cameraType);
 	}
 
-	public static boolean shouldBypassCrosshairCancellation() {
-		return getClientCompat().shouldBypassCrosshairCancellation();
-	}
-
 	public static @Nullable Vec3 adjustCameraAfterMts(Camera camera, float partialTick) {
 		return getClientCompat().adjustCameraAfterMts(camera, partialTick);
 	}

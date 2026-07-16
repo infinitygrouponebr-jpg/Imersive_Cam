@@ -4,7 +4,6 @@ import Infinitygroup.imersive_cam.ImersiveCamCommon;
 import Infinitygroup.imersive_cam.api.client.IImersiveCam;
 import Infinitygroup.imersive_cam.client.ImersiveCam;
 import Infinitygroup.imersive_cam.client.renderer.CrosshairRenderer;
-import Infinitygroup.imersive_cam.compat.mts.MtsCompatBootstrap;
 import Infinitygroup.imersive_cam.compat.tacz.TaczCrosshairLayer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -31,9 +30,6 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void preRenderGuiOverlayEvent(RenderGuiLayerEvent.Pre event) {
-		if (MtsCompatBootstrap.shouldBypassCrosshairCancellation()) {
-			return;
-		}
 		if (VanillaGuiLayers.CROSSHAIR.equals(event.getName())) {
 			if (!IImersiveCam.getInstance().getCrosshairRenderer().isCrosshairVisible()) {
 				event.setCanceled(true);

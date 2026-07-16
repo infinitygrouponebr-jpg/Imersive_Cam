@@ -27,11 +27,6 @@ public final class NoopMtsClientCompat implements IMtsClientCompat {
 	}
 
 	@Override
-	public boolean shouldBypassCrosshairCancellation() {
-		return false;
-	}
-
-	@Override
 	public @Nullable Vec3 adjustCameraAfterMts(Camera camera, float partialTick) {
 		return null;
 	}

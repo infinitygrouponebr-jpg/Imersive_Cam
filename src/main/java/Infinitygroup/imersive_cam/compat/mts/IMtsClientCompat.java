@@ -14,7 +14,5 @@ public interface IMtsClientCompat {
 
 	boolean shouldLetVanillaHandleCameraType(CameraType cameraType);
 
-	boolean shouldBypassCrosshairCancellation();
-
 	@Nullable Vec3 adjustCameraAfterMts(Camera camera, float partialTick);
 }
