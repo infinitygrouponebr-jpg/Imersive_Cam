@@ -128,6 +128,7 @@ public class Config {
 	}
 	
 	public static void onConfigReload() {
+		boolean cameraPositionCorrected = Config.CLIENT.getCameraConfig().enforcePermanentCameraPosition();
 		Perspective currentPerspective = Perspective.current();
 		PerspectiveConfig perspectiveConfig = Config.CLIENT.getPerspectiveConfig();
 		ImersiveCam instance = ImersiveCam.getInstance();
@@ -136,6 +137,9 @@ public class Config {
 		}
 		if (perspectiveConfig.isPerspectivePersistent()) {
 			perspectiveConfig.setDefaultPerspective(Perspective.current());
+		}
+		if (cameraPositionCorrected) {
+			Config.CLIENT.save();
 		}
 	}
 }

@@ -56,21 +56,11 @@ public class ImersiveCamNeoForge {
 	
 	@SubscribeEvent
 	public void registerKeyMappingsEvent(RegisterKeyMappingsEvent event) {
-		event.register(InputHandler.CAMERA_LEFT);
-		event.register(InputHandler.CAMERA_RIGHT);
-		event.register(InputHandler.CAMERA_IN);
-		event.register(InputHandler.CAMERA_OUT);
-		event.register(InputHandler.CAMERA_UP);
-		event.register(InputHandler.CAMERA_DOWN);
-		event.register(InputHandler.SWAP_CAMERA_SIDE);
 		event.register(InputHandler.TOGGLE_FIRST_PERSON);
 		event.register(InputHandler.TOGGLE_THIRD_PERSON_FRONT);
 		event.register(InputHandler.TOGGLE_THIRD_PERSON_BACK);
 		event.register(InputHandler.FREE_LOOK);
 		event.register(InputHandler.TOGGLE_CAMERA_COUPLING);
-		event.register(InputHandler.TOGGLE_X_OFFSET_PRESETS);
-		event.register(InputHandler.TOGGLE_Y_OFFSET_PRESETS);
-		event.register(InputHandler.TOGGLE_Z_OFFSET_PRESETS);
 		event.register(InputHandler.ENTER_FIRST_PERSON);
 		event.register(InputHandler.ENTER_THIRD_PERSON_FRONT);
 		event.register(InputHandler.ENTER_THIRD_PERSON_BACK);

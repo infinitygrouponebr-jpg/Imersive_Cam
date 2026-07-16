@@ -42,6 +42,7 @@ public class ImersiveCam implements IImersiveCam {
 	private EventBus eventBus;
 	
 	public void init() {
+		boolean cameraPositionCorrected = Config.CLIENT.getCameraConfig().enforcePermanentCameraPosition();
 		PluginLoader.getInstance().loadPlugins();
 		this.eventBus = EventBus.create(PluginLoader.getInstance().getPluginContainers());
 		PerspectiveConfig perspectiveConfig = Config.CLIENT.getPerspectiveConfig();
@@ -54,6 +55,9 @@ public class ImersiveCam implements IImersiveCam {
 		}
 		if (Perspective.current() != targetPerspective) {
 			this.changePerspective(targetPerspective);
+		}
+		if (cameraPositionCorrected) {
+			Config.CLIENT.save();
 		}
 	}
 	

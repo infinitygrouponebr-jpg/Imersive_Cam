@@ -86,48 +86,6 @@ public class InputHandler {
 			this.instance.changePerspective(Perspective.IMERSIVE_CAMERA);
 		}
 		
-		while (CAMERA_LEFT.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraLeft();
-			}
-		}
-		
-		while (CAMERA_RIGHT.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraRight();
-			}
-		}
-		
-		while (CAMERA_OUT.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraOut();
-			}
-		}
-		
-		while (CAMERA_IN.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraIn();
-			}
-		}
-		
-		while (CAMERA_UP.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraUp();
-			}
-		}
-		
-		while (CAMERA_DOWN.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				Config.CLIENT.getCameraConfig().adjustCameraDown();
-			}
-		}
-		
-		while (SWAP_CAMERA_SIDE.consumeClick()) {
-			if (this.instance.isImersiveCam()) {
-				this.instance.swapCameraSide();
-			}
-		}
-		
 		while (options.keyTogglePerspective.consumeClick()) {
 			this.instance.togglePerspective();
 		}
@@ -138,17 +96,6 @@ public class InputHandler {
 			this.instance.toggleCameraCoupling();
 		}
 		
-		while (TOGGLE_X_OFFSET_PRESETS.consumeClick()) {
-			this.instance.toggleOffsetXPreset();
-		}
-		
-		while (TOGGLE_Y_OFFSET_PRESETS.consumeClick()) {
-			this.instance.toggleOffsetYPreset();
-		}
-		
-		while (TOGGLE_Z_OFFSET_PRESETS.consumeClick()) {
-			this.instance.toggleOffsetZPreset();
-		}
 	}
 	
 	public void updateMovementInput(Input input) {

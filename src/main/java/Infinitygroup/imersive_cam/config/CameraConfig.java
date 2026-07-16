@@ -15,14 +15,11 @@ import java.util.List;
 import static Infinitygroup.imersive_cam.ImersiveCamCommon.MOD_ID;
 
 public class CameraConfig implements ICameraConfig {
-	// Tactical side-offset camera baseline:
-	// offsetX controls lateral placement, offsetY controls height and offsetZ controls distance.
-	// These defaults keep a higher tactical camera while the final camera pitch keeps the player framed.
-	private static final double DEFAULT_TACTICAL_OFFSET_X = 0.0D;
-	private static final double DEFAULT_TACTICAL_OFFSET_Y = 3.00D;
-	private static final double DEFAULT_TACTICAL_OFFSET_Z = 4.00D;
-	// Higher transition speed means less lag and a more stable side-offset camera.
-	private static final double DEFAULT_TACTICAL_TRANSITION_SPEED = 0.40D;
+	// Official fixed camera baseline. These values are enforced for new and existing configs.
+	private static final double PERMANENT_OFFSET_X = 0.0D;
+	private static final double PERMANENT_OFFSET_Y = 3.00D;
+	private static final double PERMANENT_OFFSET_Z = 4.00D;
+	private static final double PERMANENT_TRANSITION_SPEED = 0.40D;
 
 	private final DoubleValue offsetX;
 	private final DoubleValue offsetY;
@@ -111,34 +108,34 @@ public class CameraConfig implements ICameraConfig {
 		builder.push("offset");
 		
 		this.offsetX = builder
-			.comment("Third person camera x-offset. Negative values place the camera on the right side of the player; positive values move it left.")
+			.comment("Base camera x-offset. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.offset_x")
-			.defineInRange("offset_x", DEFAULT_TACTICAL_OFFSET_X, -Double.MAX_VALUE, Double.MAX_VALUE);
+			.defineInRange("offset_x", PERMANENT_OFFSET_X, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
 		this.offsetY = builder
-			.comment("Third person camera y-offset. Higher values lift the camera above the player and push the player lower on the screen.")
+			.comment("Base camera y-offset. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.offset_y")
-			.defineInRange("offset_y", DEFAULT_TACTICAL_OFFSET_Y, -Double.MAX_VALUE, Double.MAX_VALUE);
+			.defineInRange("offset_y", PERMANENT_OFFSET_Y, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
 		this.offsetZ = builder
-			.comment("Third person camera z-offset. Higher values move the camera farther back; lower values keep it closer to the player.")
+			.comment("Base camera z-offset. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.offset_z")
-			.defineInRange("offset_z", DEFAULT_TACTICAL_OFFSET_Z, -Double.MAX_VALUE, Double.MAX_VALUE);
+			.defineInRange("offset_z", PERMANENT_OFFSET_Z, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
 		builder.push("presets");
 		
 		this.offsetXPresets = builder
-			.comment("A list of x-offset presets that can be toggled via the 'Toggle X-Offset Presets' keybind. X controls lateral placement and these defaults keep the camera slightly over the right shoulder. WARNING: Duplicate entries can result in undefined behavior!")
+			.comment("Legacy x-offset presets kept for config compatibility. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_x_presets")
 			.defineList("presets_offset_x", () -> new ArrayList<String>(List.of("-0.25", "-0.15", "0.0")), String::new, ClientConfig::isValidDouble);
 		
 		this.offsetYPresets = builder
-			.comment("A list of y-offset presets that can be toggled via the 'Toggle Y-Offset Presets' keybind. Y controls height and these defaults raise the camera above the player without pushing into an exaggerated top-down angle. WARNING: Duplicate entries can result in undefined behavior!")
+			.comment("Legacy y-offset presets kept for config compatibility. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_y_presets")
 			.defineList("presets_offset_y", () -> new ArrayList<String>(List.of("2.60", "3.00", "3.40")), String::new, ClientConfig::isValidDouble);
 		
 		this.offsetZPresets = builder
-			.comment("A list of z-offset presets that can be toggled via the 'Toggle Z-Offset Presets' keybind. Z controls distance behind the player and these defaults keep a tactical view that is broad, but still closer than a distant survival camera. WARNING: Duplicate entries can result in undefined behavior!")
+			.comment("Legacy z-offset presets kept for config compatibility. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.presets.offset_z_presets")
 			.defineList("presets_offset_z", () -> new ArrayList<String>(List.of("3.60", "4.00", "4.40")), String::new, ClientConfig::isValidDouble);
 		
@@ -388,7 +385,7 @@ public class CameraConfig implements ICameraConfig {
 			.define("dynamic_offsets", true);
 		
 		this.offsetStepSize = builder
-			.comment("Size of the offset adjustment per step.")
+			.comment("Legacy offset adjustment step kept for config compatibility. The base camera position is defined by the mod and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.offset.step_size")
 			.defineInRange("step_size", 0.025D, -Double.MAX_VALUE, Double.MAX_VALUE);
 		
@@ -400,9 +397,9 @@ public class CameraConfig implements ICameraConfig {
 			.defineInRange("keep_camera_out_of_head_distance_multiplier", 0.75D, 0D, Double.MAX_VALUE);
 		
 		this.cameraTransitionSpeedMultiplier = builder
-			.comment("The speed multiplier at which the camera transitions between positions. Higher values feel more stable and responsive; lower values add more smoothing and lag.")
+			.comment("The fixed speed multiplier at which the camera transitions between positions. This value is part of the official camera profile and can no longer be changed.")
 			.translation(MOD_ID + ".configuration.camera.camera_transition_speed_multiplier")
-			.defineInRange("camera_transition_speed_multiplier", DEFAULT_TACTICAL_TRANSITION_SPEED, 0.05D, 1.0D);
+			.defineInRange("camera_transition_speed_multiplier", PERMANENT_TRANSITION_SPEED, 0.05D, 1.0D);
 		
 		this.centerCameraWhenLookingDownAngle = builder
 			.comment("The angle from straight down where x/y offsets are smoothly reduced to keep the player framed. Set to 0 to disable.")
@@ -494,17 +491,17 @@ public class CameraConfig implements ICameraConfig {
 	
 	@Override
 	public double getOffsetX() {
-		return this.offsetX.get();
+		return PERMANENT_OFFSET_X;
 	}
 	
 	@Override
 	public double getOffsetY() {
-		return this.offsetY.get();
+		return PERMANENT_OFFSET_Y;
 	}
 	
 	@Override
 	public double getOffsetZ() {
-		return this.offsetZ.get();
+		return PERMANENT_OFFSET_Z;
 	}
 	
 	@Override
@@ -729,7 +726,7 @@ public class CameraConfig implements ICameraConfig {
 	
 	@Override
 	public double getCameraTransitionSpeedMultiplier() {
-		return this.cameraTransitionSpeedMultiplier.get();
+		return PERMANENT_TRANSITION_SPEED;
 	}
 	
 	@Override
@@ -813,39 +810,39 @@ public class CameraConfig implements ICameraConfig {
 	}
 	
 	public void adjustCameraLeft() {
-		Config.CLIENT.set(this.offsetX, this.addStep(this.getOffsetX(), this.getMaxOffsetX(), this.isOffsetXUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void adjustCameraRight() {
-		Config.CLIENT.set(this.offsetX, this.subStep(this.getOffsetX(), this.getMinOffsetX(), this.isOffsetXUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void adjustCameraUp() {
-		Config.CLIENT.set(this.offsetY, this.addStep(this.getOffsetY(), this.getMaxOffsetY(), this.isOffsetYUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void adjustCameraDown() {
-		Config.CLIENT.set(this.offsetY, this.subStep(this.getOffsetY(), this.getMinOffsetY(), this.isOffsetYUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void adjustCameraIn() {
-		Config.CLIENT.set(this.offsetZ, this.subStep(this.getOffsetZ(), this.getMinOffsetZ(), this.isOffsetZUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void adjustCameraOut() {
-		Config.CLIENT.set(this.offsetZ, this.addStep(this.getOffsetZ(), this.getMaxOffsetZ(), this.isOffsetZUnlimited()));
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void toggleOffsetXPreset() {
-		this.toggleOffsetPreset(this.offsetX, this.getOffsetXPresets());
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void toggleOffsetYPreset() {
-		this.toggleOffsetPreset(this.offsetY, this.getOffsetYPresets());
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void toggleOffsetZPreset() {
-		this.toggleOffsetPreset(this.offsetZ, this.getOffsetZPresets());
+		this.enforcePermanentCameraPosition();
 	}
 	
 	private void toggleOffsetPreset(DoubleValue offset, List<Double> presets) {
@@ -890,10 +887,27 @@ public class CameraConfig implements ICameraConfig {
 	}
 	
 	public void swapCameraSide() {
-		Config.CLIENT.set(this.offsetX, -this.getOffsetX());
+		this.enforcePermanentCameraPosition();
 	}
 	
 	public void toggleCameraCoupling() {
 		Config.CLIENT.set(this.isCameraDecoupled, !this.isCameraDecoupled());
+	}
+
+	public boolean enforcePermanentCameraPosition() {
+		boolean changed = false;
+		changed |= this.setPermanentValue(this.offsetX, PERMANENT_OFFSET_X);
+		changed |= this.setPermanentValue(this.offsetY, PERMANENT_OFFSET_Y);
+		changed |= this.setPermanentValue(this.offsetZ, PERMANENT_OFFSET_Z);
+		changed |= this.setPermanentValue(this.cameraTransitionSpeedMultiplier, PERMANENT_TRANSITION_SPEED);
+		return changed;
+	}
+
+	private boolean setPermanentValue(DoubleValue value, double permanentValue) {
+		if (Double.compare(value.get(), permanentValue) == 0) {
+			return false;
+		}
+		Config.CLIENT.set(value, permanentValue);
+		return true;
 	}
 }
